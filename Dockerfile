@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Exposer le port sur lequel l'application va tourner
-EXPOSE 5000
+EXPOSE 8000
 
 # Commande par défaut pour exécuter les tests
-CMD ["npm", "test"]
+CMD ["npm", "i"]
