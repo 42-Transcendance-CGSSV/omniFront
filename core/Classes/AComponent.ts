@@ -1,5 +1,3 @@
-// TODO:
-
 /**
  * Interface définissant les propriétés de base d'un composant
  */
