@@ -1,16 +1,17 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: '.',
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-  },
-  server: {
-    port: 3000,
-    open: true
-  },
-  resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.json']
-  }
-}); 
+	root: ".",
+	build: {
+		outDir: "dist",
+		sourcemap: true,
+	},
+	server: {
+		port: 3004,
+		host: true,
+		open: false,
+	},
+	resolve: {
+		extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
+	},
+});
