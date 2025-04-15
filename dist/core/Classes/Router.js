@@ -61,45 +61,29 @@ export class Router {
     /**
      * Navigue vers une nouvelle URL
      * @param path Chemin de l'URL
-     * @param params Paramètres optionnels à passer au composant
      */
-    navigate(path, params = {}) {
+    navigate(path) {
         // Met à jour l'historique du navigateur
         window.history.pushState({}, '', path);
         // Gère le changement de route
-        this.handleRouteChange(params);
+        this.handleRouteChange();
     }
     /**
      * Gère le changement de route en fonction de l'URL actuelle
-     * @param extraParams Paramètres supplémentaires à transmettre au composant
      */
-    async handleRouteChange(extraParams = {}) {
+    async handleRouteChange() {
         const path = window.location.pathname;
-        // Trouve la route correspondante
         const route = this.findMatchingRoute(path);
         if (route) {
-            // Démonte le composant actuel s'il existe
             if (this.currentComponent && typeof this.currentComponent.unmount === 'function') {
                 this.currentComponent.unmount();
             }
-            // Vide le conteneur
             if (this.container) {
                 this.container.innerHTML = '';
             }
-            // Combine les paramètres d'URL avec les paramètres extras
-            const params = {
-                ...this.extractPathParams(path, route.path),
-                ...route.params,
-                ...extraParams
-            };
             try {
-                // Charge et instancie le composant
-                const ComponentClass = await route.component();
-                this.currentComponent = new ComponentClass(params);
-                // Monte le composant dans le conteneur
-                if (this.container && this.currentComponent) {
-                    this.currentComponent.mount(this.container);
-                }
+                const component = await route.component();
+                this.currentComponent = component;
             }
             catch (error) {
                 console.error('Error loading component:', error);
@@ -116,41 +100,7 @@ export class Router {
      * @returns Route correspondante ou undefined
      */
     findMatchingRoute(path) {
-        // D'abord, essaie de trouver une correspondance exacte
-        let route = this.routes.find(r => r.path === path);
-        // Si pas de correspondance exacte, cherche des routes avec paramètres dynamiques
-        if (!route) {
-            route = this.routes.find(r => {
-                // Convertit le pattern de route en regex
-                const pattern = r.path.replace(/:\w+/g, '([^/]+)');
-                const regex = new RegExp(`^${pattern}$`);
-                return regex.test(path);
-            });
-        }
-        return route;
-    }
-    /**
-     * Extrait les paramètres dynamiques d'un chemin d'URL
-     * @param path Chemin de l'URL actuelle
-     * @param routePath Pattern de la route avec paramètres (ex: /users/:id)
-     * @returns Objet contenant les paramètres extraits
-     */
-    extractPathParams(path, routePath) {
-        const params = {};
-        // Si la route ne contient pas de paramètres dynamiques, retourne un objet vide
-        if (!routePath.includes(':')) {
-            return params;
-        }
-        // Extrait les valeurs des paramètres du chemin actuel
-        const pathSegments = path.split('/').filter(segment => segment);
-        const routeSegments = routePath.split('/').filter(segment => segment);
-        for (let i = 0; i < routeSegments.length; i++) {
-            if (routeSegments[i].startsWith(':')) {
-                const paramName = routeSegments[i].substring(1);
-                params[paramName] = pathSegments[i] || '';
-            }
-        }
-        return params;
+        return this.routes.find(r => r.path === path);
     }
     /**
      * Gère le cas où aucune route ne correspond (404)
@@ -163,9 +113,8 @@ export class Router {
         // Si un composant 404 a été défini, l'affiche
         if (this.notFoundComponent && this.container) {
             try {
-                const NotFoundClass = await this.notFoundComponent();
-                this.currentComponent = new NotFoundClass({});
-                this.currentComponent.mount(this.container);
+                const notFoundComponent = await this.notFoundComponent();
+                this.currentComponent = notFoundComponent;
             }
             catch (error) {
                 console.error('Error loading not found component:', error);

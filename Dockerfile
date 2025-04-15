@@ -19,5 +19,5 @@ RUN npx tsc
 # Exposer le port sur lequel l'application va tourner
 EXPOSE 3003
 
-# Commande par défaut pour démarrer le serveur
-CMD ["serve", "-s", ".", "-l", "3003"]
+# Commande par défaut pour démarrer le serveur avec la configuration
+CMD ["serve", "-s", ".", "-l", "3003", "--config", "serve.json"]
