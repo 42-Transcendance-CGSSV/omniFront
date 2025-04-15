@@ -1,6 +1,9 @@
 {
   "dependencies": {
-    "@babel/parser": "^7.27.0"
+    "@babel/parser": "^7.27.0",
+    "@tailwindcss/postcss": "^4.1.4",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.4"
   },
   "name": "omnifront",
   "version": "1.0.0",
@@ -29,8 +32,8 @@
   "homepage": "https://github.com/42-Transcendance-CGPSV/omniFront#readme",
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "@vitejs/plugin-react": "^4.2.1",
     "typescript": "^5.8.3",
-    "vite": "^5.0.0",
-    "@vitejs/plugin-react": "^4.2.1"
+    "vite": "^5.0.0"
   }
 }

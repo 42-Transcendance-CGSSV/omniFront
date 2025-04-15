@@ -66,3 +66,7 @@ docker-compose down
 Sans Docker Compose :
 
 docker stop omnifront_dev && docker rm omnifront_dev
+
+Pour Installer une lib pendant le dev:
+
+docker exec -it omni_front npm install <lib>

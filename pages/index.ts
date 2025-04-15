@@ -5,6 +5,7 @@ import ImagePage from "./ImagePage.js";
 import PongPage from "./PongPage.js";
 import UserProfilePage from "./UserProfilePage.js";
 import NotFoundPage from "./NotFoundPage.js";
+import { HomeTest } from "./HomeTest.js";
 
 export {
 	AboutPage,
@@ -14,4 +15,5 @@ export {
 	PongPage,
 	UserProfilePage,
 	NotFoundPage,
+	HomeTest,
 };
