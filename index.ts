@@ -1,4 +1,4 @@
-import routes from "routes";
+import routes from "./routes.js";
 import {
 	AboutPage,
 	HomePage,
@@ -6,7 +6,9 @@ import {
 	PongPage,
 	UserProfilePage,
 	NotFoundPage,
-} from "pages/index";
+} from "./pages/index.js";
+
+console.log("Hello World");
 
 // Configuration des routes
 routes

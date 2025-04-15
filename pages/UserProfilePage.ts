@@ -1,4 +1,5 @@
-import { AComponent, AComponentProps } from "./index";
+import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
+
 
 interface UserProfilePageProps extends AComponentProps {
 	id: string;

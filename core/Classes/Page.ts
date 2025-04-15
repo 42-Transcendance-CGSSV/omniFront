@@ -1,24 +1,32 @@
-import { AComponent } from "./AComponent";
+import { AComponent } from "./AComponent.js";
 
 export class Page {
 	protected name: string;
-	protected component: AComponent | null;
-	protected content: string = "";
+	protected components: AComponent[];
 
-	constructor(name: string, component?: AComponent) {
+	constructor(name: string, ...components: AComponent[]) {
 		this.name = name;
-		this.component = component || null;
-	}
-
-	protected setContent(content: string): void {
-		this.content = content;
-		const app = document.getElementById("app");
-		if (app) {
-			app.innerHTML = content;
-		}
+		this.components = components;
 	}
 
 	public render(): void {
-		// Méthode à implémenter par les classes enfants
+		const app = document.getElementById("app");
+		if (app) {
+			app.innerHTML = ''; // Clear the container
+			this.components.forEach(component => {
+				component.mount(app);
+			});
+		}
+	}
+
+	public addComponent(component: AComponent): void {
+		this.components.push(component);
+	}
+
+	public removeComponent(component: AComponent): void {
+		const index = this.components.indexOf(component);
+		if (index !== -1) {
+			this.components.splice(index, 1);
+		}
 	}
 }

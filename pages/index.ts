@@ -1,18 +1,15 @@
-import { AComponent, AComponentProps } from "core/Classes/AComponent.js";
-import { Page } from "../core/Classes/Page";
-import HomePage from "./HomePage";
-import AboutPage from "./AboutPage";
-import ImagePage from "./ImagePage";
-import PongPage from "./PongPage";
-import UserProfilePage from "./UserProfilePage";
-import NotFoundPage from "./NotFoundPage";
+import { Page } from "../core/Classes/Page.js";
+import HomePage from "./HomePage.js";
+import AboutPage from "./AboutPage.js";
+import ImagePage from "./ImagePage.js";
+import PongPage from "./PongPage.js";
+import UserProfilePage from "./UserProfilePage.js";
+import NotFoundPage from "./NotFoundPage.js";
 
 export {
 	AboutPage,
 	Page,
-	AComponent,
 	HomePage,
-	AComponentProps,
 	ImagePage,
 	PongPage,
 	UserProfilePage,

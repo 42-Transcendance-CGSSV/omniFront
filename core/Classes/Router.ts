@@ -1,3 +1,5 @@
+import { Page } from "./Page.js";
+
 type Route = {
 	path: string;
 	component: () => Promise<any>;
@@ -99,8 +101,20 @@ export class Router {
 			}
 			
 			try {
-				const component = await route.component();
-				this.currentComponent = component;
+				const Component = await route.component();
+				const params = this.extractRouteParams(route.path, path);
+				
+				// Check if the component is a Page
+				if (Component.prototype instanceof Page) {
+					this.currentComponent = new Component();
+					this.currentComponent.render();
+				} else {
+					this.currentComponent = new Component(params);
+					this.currentComponent.render();
+					if (this.container) {
+						this.currentComponent.mount(this.container);
+					}
+				}
 			} catch (error) {
 				console.error('Error loading component:', error);
 				this.handleNotFound();
@@ -111,12 +125,63 @@ export class Router {
 	}
 
 	/**
+	 * Extracts route parameters from the current path
+	 * @param routePath The route path pattern (e.g., '/users/:id')
+	 * @param currentPath The current URL path
+	 * @returns Object containing route parameters
+	 */
+	private extractRouteParams(routePath: string, currentPath: string): Record<string, string> {
+		const params: Record<string, string> = {};
+		const routeSegments = routePath.split('/').filter(Boolean);
+		const pathSegments = currentPath.split('/').filter(Boolean);
+		
+		for (let i = 0; i < routeSegments.length; i++) {
+			const routeSegment = routeSegments[i];
+			if (routeSegment.startsWith(':')) {
+				const paramName = routeSegment.slice(1);
+				params[paramName] = pathSegments[i];
+			}
+		}
+		
+		return params;
+	}
+
+	/**
 	 * Trouve la route qui correspond au chemin spécifié
 	 * @param path Chemin de l'URL actuelle
 	 * @returns Route correspondante ou undefined
 	 */
 	private findMatchingRoute(path: string): Route | undefined {
-		return this.routes.find(r => r.path === path);
+		// Split the path into segments
+		const pathSegments = path.split('/').filter(Boolean);
+		
+		// Try to find a matching route
+		return this.routes.find(route => {
+			const routeSegments = route.path.split('/').filter(Boolean);
+			
+			// If the number of segments doesn't match, it's not a match
+			if (pathSegments.length !== routeSegments.length) {
+				return false;
+			}
+			
+			// Compare each segment
+			for (let i = 0; i < routeSegments.length; i++) {
+				const routeSegment = routeSegments[i];
+				const pathSegment = pathSegments[i];
+				
+				// If the route segment is a parameter (starts with ':'), it matches any value
+				if (routeSegment.startsWith(':')) {
+					continue;
+				}
+				
+				// Otherwise, segments must match exactly
+				if (routeSegment !== pathSegment) {
+					return false;
+				}
+			}
+			
+			return true;
+		});
 	}
 
 	/**
@@ -131,8 +196,10 @@ export class Router {
 		// Si un composant 404 a été défini, l'affiche
 		if (this.notFoundComponent && this.container) {
 			try {
-				const notFoundComponent = await this.notFoundComponent();
-				this.currentComponent = notFoundComponent;
+				const NotFoundComponent = await this.notFoundComponent();
+				this.currentComponent = new NotFoundComponent();
+				this.currentComponent.render();
+				this.currentComponent.mount(this.container);
 			} catch (error) {
 				console.error('Error loading not found component:', error);
 				if (this.container) {

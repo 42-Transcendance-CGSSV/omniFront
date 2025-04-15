@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "./index";
+import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
 
 interface HomePageProps extends AComponentProps {
 	// Ajoutez ici les props spécifiques à HomePage si nécessaire
