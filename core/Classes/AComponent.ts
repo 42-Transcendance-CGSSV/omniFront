@@ -1,7 +1,7 @@
 /**
  * Interface définissant les propriétés de base d'un composant
  */
-interface AComponentProps {
+export interface AComponentProps {
 	id?: string;
 	className?: string;
 	[key: string]: any; // Pour permettre des propriétés supplémentaires
@@ -10,7 +10,7 @@ interface AComponentProps {
 /**
  * Classe de base pour créer des composants réutilisables
  */
-class AComponent<P extends AComponentProps = AComponentProps> {
+export class AComponent<P extends AComponentProps = AComponentProps> {
 	protected element: HTMLElement | null = null;
 	protected props: P;
 	protected state: Record<string, any> = {};

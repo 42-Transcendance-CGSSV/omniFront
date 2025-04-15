@@ -1,13 +1,13 @@
 import { AComponent, AComponentProps } from './AComponent.js';
 
-interface TextComponentProps extends AComponentProps {
+interface DivComponentProps extends AComponentProps {
 	text: string;
 	onClick?: () => void;
 }
 
-export class TextComponent extends AComponent<TextComponentProps> {
-	public render(): TextComponent {
-		this.element = document.createElement("p");
+export class DivComponent extends AComponent<DivComponentProps> {
+	public render(): DivComponent {
+		this.element = document.createElement("div");
 		this.applyBasicProperties();
 		this.element.textContent = this.props.text;
 

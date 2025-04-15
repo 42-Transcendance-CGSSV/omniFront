@@ -1,3 +1,5 @@
+import { AComponent } from './AComponent.js';
+
 export class App {
 	private rootComponent: AComponent;
 	private rootElement: HTMLElement;
