@@ -46,11 +46,7 @@ docker build -t omnifront .
 
 🚀 b) Lancement avec hot-reload
 
-docker run -p 3004:3004 \
- -v $(pwd):/app \
- -v /app/node_modules \
- --name omnifront_dev \
- omnifront
+docker run -p 3004:3004 -v $(pwd):/app -v /app/node_modules omnifront
 
 🧠 Ici aussi :
 

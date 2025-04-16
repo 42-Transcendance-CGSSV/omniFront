@@ -12,10 +12,14 @@ export class Page {
 	public render(): void {
 		const app = document.getElementById("app");
 		if (app) {
-			app.innerHTML = ''; // Clear the container
-			this.components.forEach(component => {
+			// virtual node to implement there
+			app.innerHTML = ""; // Clear the container
+			this.components.forEach((component) => {
 				component.mount(app);
 			});
+			if (typeof (this as any).mounted === "function") {
+				(this as any).mounted();
+			}
 		}
 	}
 
