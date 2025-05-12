@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent.js';
+import { AComponent, AComponentProps } from './AComponent.js';
 
 //The div component is a basic component that creates a div element and applies basic properties to it. It can also handle click events if provided.
 // It doesn't need text content as a prop. Because A div it's just a box that can container other elements.
@@ -9,9 +9,7 @@ interface DivComponentProps extends AComponentProps {
 
 export class DivComponent extends AComponent<DivComponentProps> {
     public render(): DivComponent {
-        this.element = document.createElement("div");
-        this.applyBasicProperties();
-        this.element.textContent = this.props.text;
+        super.render();
 
         if (this.props.onClick) {
             this.addEventListener("click", this.props.onClick as EventListener);

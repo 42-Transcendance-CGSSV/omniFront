@@ -1,11 +1,11 @@
-import {Page} from "../core/Classes/Page.js";
-import {DivComponent} from "../core/Classes/DivComponent";
-import {TextComponent} from "../core/Classes/TextComponent";
+import { Page } from "../core/Classes/Page.js";
+import { DivComponent } from "../core/Classes/DivComponent";
+import { TextComponent } from "../core/Classes/TextComponent";
 import PlayerDisplayer from "../OComponents/PlayerDisplayer";
 
 class PongPage extends Page {
     constructor() {
-        const divtest = new DivComponent({id: "divtest"});
+        const divtest = new DivComponent({ id: "divtest" });
         super("PongPage", divtest);
         this.render()
 
@@ -19,7 +19,7 @@ class PongPage extends Page {
 
 
     private setupTitle(element: HTMLElement | null): void {
-        const title = new TextComponent({text: "Pong Game", id: "title"});
+        const title = new TextComponent({ text: "Pong Game", id: "title" });
         if (element) {
             title.render = function () {
                 this.element = document.createElement("h1");
@@ -35,7 +35,7 @@ class PongPage extends Page {
     private drawPlayers(element: HTMLElement | null): void {
         const p1 = new PlayerDisplayer("./assets/image.png");
         if (element) {
-            p1.build().render().mount(element);
+            p1.build().mount(element);
         }
     }
 

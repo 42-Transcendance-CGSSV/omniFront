@@ -4,6 +4,7 @@
 export interface AComponentProps {
 	id?: string;
 	className?: string;
+	children?: AComponent[]; // Liste d'autres composants enfants
 	[key: string]: any; // Pour permettre des propriétés supplémentaires
 }
 
@@ -29,11 +30,26 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
 	 * @returns Le composant lui-même (pour le chaînage)
 	 */
 	public render(): AComponent<P> {
-		// Cette méthode doit être surchargée par les classes enfants
+		console.log(`Rendering component: ${this.constructor.name}`);
 		this.element = document.createElement("div");
 		this.applyBasicProperties();
+
+		if (this.props.children) {
+			console.log(`Rendering children of ${this.constructor.name}`);
+			this.props.children.forEach((child) => {
+				child.render();
+				const childElement = child.getElement();
+				if (childElement) {
+					this.element?.appendChild(childElement);
+				} else {
+					console.warn(`Child of ${this.constructor.name} has no element.`);
+				}
+			});
+		}
+
 		return this;
 	}
+
 
 	/**
 	 * Applique les propriétés de base au composant
