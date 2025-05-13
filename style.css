@@ -1,4 +1,15 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+@theme {
+    --color-darkblue-50: oklch(0.95 0.0255 283.49);
+    --color-darkblue-100: oklch(0.91 0.0464 282.76);
+    --color-darkblue-200: oklch(0.83 0.0895 283.56);
+    --color-darkblue-300: oklch(0.72 0.1506 282.36);
+    --color-darkblue-400: oklch(0.62 0.2091 282.85);
+    --color-darkblue-500: oklch(0.56 0.2506 282.59);
+    --color-darkblue-600: oklch(0.52 0.2784 282.44);
+    --color-darkblue-700: oklch(0.47 0.2572 282.36);
+    --color-darkblue-800: oklch(0.41 0.2149 282.81);
+    --color-darkblue-900: oklch(0.36 0.169 284.74);
+    --color-darkblue-950: oklch(0.16 0.0542 291.35);
+}
