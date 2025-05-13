@@ -1,9 +1,9 @@
 {
   "dependencies": {
     "@babel/parser": "^7.27.0",
-    "@tailwindcss/postcss": "^4.1.4",
+    "@tailwindcss/postcss": "^4.1.6",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4"
+    "tailwindcss": "^4.1.6"
   },
   "name": "omnifront",
   "version": "1.0.0",
@@ -24,7 +24,7 @@
     "url": "git+https://github.com/42-Transcendance-CGPSV/omniFront.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Tebourbi Gourgeau Sofien Victor (tsofien-)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/42-Transcendance-CGPSV/omniFront/issues"
