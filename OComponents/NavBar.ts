@@ -21,29 +21,23 @@ export class NavBar extends AComponent {
         this.element = document.createElement("header");
         this.applyBasicProperties();
 
-        // Créer la structure de base
         const navElement = document.createElement("nav");
-        navElement.className = "py-3 px-10";
+        navElement.className = "py-3 px-6 md:px-10 relative";
 
         const navbarContainer = document.createElement("div");
         navbarContainer.id = "navbar-container";
-        navbarContainer.className = "min-h-14 min-w-fit max-w-full flex flex-col md:flex-row items-center justify-between";
+        navbarContainer.className = "min-h-14 max-w-full flex flex-col lg:flex-row items-center justify-between";
 
-        // Logo et bouton de menu
         const logoContainer = document.createElement("div");
-        logoContainer.className = "max-w-full flex items-center justify-between gap-8";
+        logoContainer.className = "flex items-center justify-between w-full lg:w-auto";
 
-        // Ajouter le titre
-        const title = document.createElement("h1");
-        title.className = "md:animate-typing md:border-r-3 border-r-darkblue-300 text-xl lg:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
-        title.textContent = "TRANSCENDENCE";
-        logoContainer.appendChild(title);
+        const mobileButtonContainer = document.createElement("div");
+        mobileButtonContainer.className = "flex lg:hidden order-first";
 
-        // Ajouter le bouton mobile
         const mobileButton = document.createElement("button");
         mobileButton.setAttribute("data-collapse-toggle", "navbar-default");
         mobileButton.type = "button";
-        mobileButton.className = "inline-flex items-center w-8 h-10 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 dark:text-gray-400";
+        mobileButton.className = "inline-flex items-center p-2 w-10 h-10 justify-center text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600";
         mobileButton.setAttribute("aria-controls", "navbar-default");
         mobileButton.setAttribute("aria-expanded", "false");
 
@@ -52,14 +46,14 @@ export class NavBar extends AComponent {
         mobileButtonSpan.textContent = "Open main menu";
         mobileButton.appendChild(mobileButtonSpan);
 
-        const mobileButtonSvg = document.createElement("svg");
-        mobileButtonSvg.className = "w-8 h-8";
+        const svgNS = "http://www.w3.org/2000/svg";
+        const mobileButtonSvg = document.createElementNS(svgNS, "svg");
+        mobileButtonSvg.classList.add("w-5", "h-5");
         mobileButtonSvg.setAttribute("aria-hidden", "true");
-        mobileButtonSvg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         mobileButtonSvg.setAttribute("fill", "none");
         mobileButtonSvg.setAttribute("viewBox", "0 0 17 14");
 
-        const mobileButtonPath = document.createElement("path");
+        const mobileButtonPath = document.createElementNS(svgNS, "path");
         mobileButtonPath.setAttribute("stroke", "currentColor");
         mobileButtonPath.setAttribute("stroke-linecap", "round");
         mobileButtonPath.setAttribute("stroke-linejoin", "round");
@@ -68,16 +62,29 @@ export class NavBar extends AComponent {
         mobileButtonSvg.appendChild(mobileButtonPath);
 
         mobileButton.appendChild(mobileButtonSvg);
-        logoContainer.appendChild(mobileButton);
+        mobileButtonContainer.appendChild(mobileButton);
 
-        // Ajouter les liens
+        const titleContainer = document.createElement("div");
+        titleContainer.className = "hidden xxs:flex lg:flex";
+
+        const title = document.createElement("h1");
+        title.className = "max-w-fit animate-typing md:border-r-3 border-r-darkblue-300 text-sm md:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
+        title.textContent = "TRANSCENDENCE";
+        titleContainer.appendChild(title);
+
+        logoContainer.appendChild(mobileButtonContainer);
+        logoContainer.appendChild(titleContainer);
+
+        const rightSpacerContainer = document.createElement("div");
+        rightSpacerContainer.className = "w-10 lg:hidden"; // Même largeur que le bouton
+        logoContainer.appendChild(rightSpacerContainer);
+
         const navLinksContainer = document.createElement("div");
-        navLinksContainer.className = "hidden w-full md:block";
-        navLinksContainer.id = "navbar-default";
+        navLinksContainer.className = "hidden w-full md:w-auto lg:block";
 
         const navLinksList = document.createElement("ul");
         navLinksList.id = "nav-links";
-        navLinksList.className = "flex flex-col md:flex-row items-center justify-center gap-6 2xl:gap-9 text-barwhite text-2xl font-glacial antialiased";
+        navLinksList.className = "flex flex-col lg:flex-row items-center justify-center gap-6 2xl:gap-9 text-barwhite text-xl font-glacial antialiased";
 
         const links = ["Accueil", "Pong", "Discussions", "Github"];
         links.forEach(linkText => {
@@ -92,16 +99,15 @@ export class NavBar extends AComponent {
 
         navLinksContainer.appendChild(navLinksList);
 
-        // Ajouter le bouton de connexion - UTILISER CORRECTEMENT LE COMPOSANT
-        const loginButton = new BorderedButton("login", "Connexion").build();
+        const loginButton = new BorderedButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build();
 
-        // Structure finale
         navbarContainer.appendChild(logoContainer);
         navbarContainer.appendChild(navLinksContainer);
-        navbarContainer.appendChild(loginButton.getElement()!); // Ajouter l'élément complet
+        navbarContainer.appendChild(loginButton.getElement()!);
 
         navElement.appendChild(navbarContainer);
         this.element.appendChild(navElement);
+
 
         return this;
     }

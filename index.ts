@@ -5,8 +5,7 @@ import {
 	ImagePage,
 	PongPage,
 	UserProfilePage,
-	NotFoundPage,
-	HomeTest,
+	NotFoundPage
 } from "./pages/index.js";
 
 // Configuration des routes
@@ -30,10 +29,6 @@ routes
 	.addRoute({
 		path: "/pong",
 		component: () => Promise.resolve(PongPage),
-	})
-	.addRoute({
-		path: "/test",
-		component: () => Promise.resolve(HomeTest),
 	})
 	.setNotFoundComponent(() => Promise.resolve(NotFoundPage));
 

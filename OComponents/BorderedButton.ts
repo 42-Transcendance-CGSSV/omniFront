@@ -4,16 +4,16 @@ import {DivComponent} from "../core/Classes/DivComponent";
 export default class BorderedButton {
     private readonly id: string;
     private readonly textContent: string;
-    private roundedValue: string = "rounded-4xl";
+    public roundedValue: string = "rounded-4xl";
 
-    private textStyle: string = "font-glacial text-2xl text-barwhite";
-    private interiorStyle: string = "bg-[#0F0823] px-6 py-2";
+    public textStyle: string = "font-glacial text-2xl text-barwhite";
+    public interiorStyle: string = "bg-[#0F0823] px-6 py-2";
 
-    private borderColors: string = "bg-gradient-to-r from-[#B794DB] from-0% via-[#70559D] via-43% to-[#3A309B] to-100%";
-    private borderWidth: string = "p-[2.5px]";
+    public borderColors: string = "bg-gradient-to-r from-[#B794DB] from-0% via-[#70559D] via-43% to-[#3A309B] to-100%";
+    public borderWidth: string = "p-[2.5px]";
 
-    private animation: string = "animate-fade-left animate-ease-linear";
-    private displayCondition: string = "hidden md:inline";
+    public animation: string = "animate-fade-left animate-ease-linear";
+    public displayCondition: string = "hidden md:inline";
 
 
     public constructor(id: string, textContent: string = "{replace this placeholder}", params?: Partial<BorderedButton>) {
