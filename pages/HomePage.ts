@@ -1,22 +1,17 @@
-import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
+import {Page} from "../core/Classes/Page";
+import {NavBar} from "../OComponents/NavBar";
 
-interface HomePageProps extends AComponentProps {
-	// Ajoutez ici les props spécifiques à HomePage si nécessaire
-}
+class HomePage extends Page {
 
-class HomePage extends AComponent<HomePageProps> {
-	public render() {
-		this.element = document.createElement("div");
-		this.element.innerHTML = `
-			<h1>Bienvenue sur la page d'accueil</h1>
-			<p>Ceci est un test du router SPA</p>
-			<nav>
-				<a href="/about">Aller à la page About</a>
-				<a href="/users/42">Voir le profil utilisateur 42</a>
-			</nav>
-		`;
-		return this;
-	}
+    constructor() {
+        super("PongPage", new NavBar({ }));
+        this.render()
+    }
+
+    render(): void {
+        super.render();
+    }
+
 }
 
 export default HomePage;
