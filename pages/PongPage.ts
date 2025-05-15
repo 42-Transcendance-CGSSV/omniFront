@@ -9,8 +9,8 @@ class PongPage extends Page {
         super("PongPage", divtest);
         this.render()
 
-        this.setupTitle(divtest.getElement())
-        this.drawPlayers(divtest.getElement())
+        this.setupTitle(divtest.getElement()!)
+        this.drawPlayers(divtest.getElement()!)
     }
 
     render(): void {

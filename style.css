@@ -19,8 +19,11 @@
 
     --animate-typing: typing 1.7s steps(20), blink 1s infinite;
     --animate-infinite-typing: typing 1.7s steps(20) infinite alternate, blink 1s infinite;
+    --animate-ping: ping 1.5s linear infinite;
     --animate-fade-in: fade-in .5s ease-in-out;
     --animate-fade-left: fade-left 1000ms linear;
+    --animate-paddle-move-1: paddle-move-1 4s linear infinite alternate;
+    --animate-paddle-move-2: paddle-move-2 4s linear infinite alternate;
 
     --font-glacial: Glacial Indifference;
     --font-poppins: poppins;
@@ -64,6 +67,30 @@
 
         100% {
             border-color: var(--color-darkblue-300);
+        }
+    }
+
+    @keyframes paddle-move-1 {
+        0% {
+            transform: translateY(-50%)  translateX(0%);
+        }
+        50%{
+            transform: translateX(5px);
+        }
+        100% {
+            transform: translateY(50%) translateX(0%);
+        }
+    }
+
+    @keyframes paddle-move-2 {
+        0% {
+            transform: translateY(50%)  translateX(0%);
+        }
+        50%{
+            transform: translateX(5px);
+        }
+        100% {
+            transform: translateY(-50%) translateX(0%);
         }
     }
 

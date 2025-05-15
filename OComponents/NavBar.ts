@@ -1,5 +1,5 @@
 import {AComponent, AComponentProps} from "../core/Classes/AComponent";
-import BorderedButton from "./BorderedButton";
+import GradientButton from "./GradientButton";
 
 export class NavBar extends AComponent {
 
@@ -68,7 +68,7 @@ export class NavBar extends AComponent {
         titleContainer.className = "hidden xxs:flex lg:flex";
 
         const title = document.createElement("h1");
-        title.className = "max-w-fit animate-typing md:border-r-3 border-r-darkblue-300 text-sm md:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
+        title.className = "max-w-fit animate-typing select-none md:border-r-3 border-r-darkblue-300 text-sm md:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
         title.textContent = "TRANSCENDENCE";
         titleContainer.appendChild(title);
 
@@ -99,7 +99,7 @@ export class NavBar extends AComponent {
 
         navLinksContainer.appendChild(navLinksList);
 
-        const loginButton = new BorderedButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build();
+        const loginButton = new GradientButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build();
 
         navbarContainer.appendChild(logoContainer);
         navbarContainer.appendChild(navLinksContainer);
