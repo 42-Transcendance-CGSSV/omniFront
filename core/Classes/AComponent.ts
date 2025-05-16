@@ -59,7 +59,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
 
         if (this.props.id) this.element.id = this.props.id;
 
-        if (this.props.className) this.element.className = this.props.className;
+        if (this.props.className) this.element.setAttribute("class", this.props.className);
     }
 
     /**
@@ -156,7 +156,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
      * Récupère l'élément DOM du composant
      * @returns L'élément DOM du composant
      */
-    public getElement(): HTMLElement | undefined {
+    public getElement(): HTMLElement  | undefined {
         return this.element;
     }
 }

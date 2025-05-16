@@ -68,7 +68,7 @@ export class NavBar extends AComponent {
         titleContainer.className = "hidden xxs:flex lg:flex";
 
         const title = document.createElement("h1");
-        title.className = "max-w-fit animate-typing select-none md:border-r-3 border-r-darkblue-300 text-sm md:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
+        title.className = "max-w-fit animate-typing select-none md:border-r-3 border-r-darkblue-300 text-sm lg:text-lg xl:text-xl 2xl:text-2xl font-bold font-poppins bg-gradient-to-r to-[#7B6DFF] from-[#B794DB] inline-block text-transparent bg-clip-text antialiased";
         title.textContent = "TRANSCENDENCE";
         titleContainer.appendChild(title);
 

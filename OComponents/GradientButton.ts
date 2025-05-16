@@ -6,7 +6,7 @@ export default class GradientButton {
     private readonly textContent: string;
     public roundedValue: string = "rounded-4xl";
 
-    public textStyle: string = "font-glacial text-2xl text-barwhite";
+    public textStyle: string = "font-glacial text-xl text-barwhite";
     public interiorStyle: string = "bg-darkblue-950 px-6 py-2";
 
     public borderColors: string = "bg-gradient-to-r from-[#B794DB] from-0% via-[#70559D] via-43% to-[#3A309B] to-100%";

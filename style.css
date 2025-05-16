@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import url("https://fonts.cdnfonts.com/css/glacial-indifference-2");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @theme {
     --color-darkblue-50: oklch(0.95 0.0255 283.49);
@@ -17,6 +18,9 @@
     --color-barwhite: #D1D1D1;
     --color-subwhite: #b4b1bf;
 
+    --color-feature-background: rgba(255, 255, 255, 0.015);
+    --color-lavender: #bebfff;
+
     --animate-typing: typing 1.7s steps(20), blink 1s infinite;
     --animate-infinite-typing: typing 1.7s steps(20) infinite alternate, blink 1s infinite;
     --animate-ping: ping 1.5s linear infinite;
@@ -27,6 +31,7 @@
 
     --font-glacial: Glacial Indifference;
     --font-poppins: poppins;
+    --font-inter: Inter;
 
     --breakpoint-xxs: 230px;
 
