@@ -6,6 +6,7 @@ import {ButtonComponent} from "../core/Classes/ButtonComponent";
 import FeatureCard from "../OComponents/FeatureCard";
 import {AComponent} from "../core/Classes/AComponent";
 import axios from "axios";
+import Footer from "../OComponents/Footer";
 
 class HomePage extends Page {
 
@@ -29,7 +30,9 @@ class HomePage extends Page {
         this.setupOnlineIndicator(homeContainerElement)
         this.setupPaddles(homeContainerElement)
         this.setupGameInstructions(homeContainerElement)
-        this.setupFeatures();
+        this.setupFeatures().then(() => {
+            document.getElementById("app")!.appendChild(new Footer().build().render().getElement()!)
+        });
     }
 
     private setupTitles(root: HTMLElement): void {
@@ -152,8 +155,10 @@ class HomePage extends Page {
         }).mount(root)
     }
 
-    private setupFeatures() {
-        axios.get("/assets/features/features.json").then((response) => {
+    private async setupFeatures(): Promise<void> {
+        return new Promise(async (resolve, _reject) => {
+
+            const response = await axios.get("/assets/features/features.json");
             const featuresCards: AComponent[] = [];
 
             const features = response.data.features;
@@ -195,8 +200,8 @@ class HomePage extends Page {
             });
 
             document.getElementById("app")!.appendChild(container.render().getElement()!)
+            return resolve();
         });
-
     }
 
 

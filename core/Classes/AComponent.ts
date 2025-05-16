@@ -13,6 +13,7 @@ export interface AComponentProps {
  */
 export class AComponent<P extends AComponentProps = AComponentProps> {
     protected element: HTMLElement | undefined = undefined;
+    protected rendered: boolean = false;
     protected props: P;
     protected state: Record<string, any> = {};
     private eventListeners: Array<{ type: string; handler: EventListener }> = [];
@@ -30,21 +31,45 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
      * @returns Le composant lui-même (pour le chaînage)
      */
     public render(): AComponent<P> {
-        console.log(`Rendering component: ${this.constructor.name}`);
+        if (this.rendered) {
+            return this;
+        }
+        this.rendered = true;
+        console.group(`Rendering ${this.props.id || this.constructor.name}`);
+        console.debug(`Render appelé pour ${this.props.id}`);
+
+        const callerInfo = new Error().stack?.split('\n')[2] || 'Inconnu';
+        console.debug(`Appelé par: ${callerInfo}`);
+
+        console.groupEnd();
         this.element = document.createElement("div");
         this.applyBasicProperties();
 
         if (this.props.children) {
-            console.log(`Rendering children of ${this.constructor.name}`);
-            this.props.children.forEach((child) => {
-                child.render();
-                const childElement = child.getElement();
-                if (childElement) {
-                    this.element?.appendChild(childElement);
-                } else {
-                    console.warn(`Child of ${this.constructor.name} has no element.`);
-                }
-            });
+            const renderChildren = (children: AComponent[], parentElement: HTMLElement | null) => {
+                if (!parentElement) return;
+
+                children.forEach(child => {
+
+                    if (!child.rendered) {
+                        child.render();
+                        child.rendered = true;
+                        const childElement = child.getElement();
+
+                        if (childElement) {
+                            parentElement.appendChild(childElement);
+
+                            if (child.props.children) {
+                                renderChildren(child.props.children, childElement);
+                            }
+                        } else {
+                            console.warn(`Child ${child.props.id} of ${this.constructor.name} has no element.`);
+                        }
+                    }
+                });
+            };
+
+            renderChildren(this.props.children, this.element);
         }
 
         return this;
@@ -156,7 +181,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
      * Récupère l'élément DOM du composant
      * @returns L'élément DOM du composant
      */
-    public getElement(): HTMLElement  | undefined {
+    public getElement(): HTMLElement | undefined {
         return this.element;
     }
 }

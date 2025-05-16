@@ -21,7 +21,7 @@ class PlayerDisplayer {
             children: [playerImage] // <-- C’est ici qu’on utilise le système
         });
 
-        return rootDiv.render(); // <-- Pas de mount ici !
+        return rootDiv // <-- Pas de mount ici ! + pas de render non plus sinon ca ne s'affichera pas pour les composants complexes
     }
 }
 

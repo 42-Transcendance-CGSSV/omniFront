@@ -117,10 +117,10 @@ export class Router {
 				}
 			} catch (error) {
 				console.error('Error loading component:', error);
-				this.handleNotFound();
+				await this.handleNotFound();
 			}
 		} else {
-			this.handleNotFound();
+			await this.handleNotFound();
 		}
 	}
 

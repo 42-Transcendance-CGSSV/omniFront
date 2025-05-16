@@ -1,4 +1,4 @@
-import routes from "./routes.js";
+import router from "./routes.js";
 import {
 	AboutPage,
 	HomePage,
@@ -9,7 +9,7 @@ import {
 } from "./pages/index.js";
 
 // Configuration des routes
-routes
+router
 	.addRoute({
 		path: "/",
 		component: () => Promise.resolve(HomePage),
@@ -32,5 +32,6 @@ routes
 	})
 	.setNotFoundComponent(() => Promise.resolve(NotFoundPage));
 
-// Démarrer le router
-routes.start();
+document.addEventListener('DOMContentLoaded', () => {
+	router.start();
+});

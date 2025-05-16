@@ -7,7 +7,6 @@ interface ImgProps extends AComponentProps {
 
 export class ImgComponent extends AComponent<ImgProps> {
 	public render(): AComponent<ImgProps> {
-		console.log("ImgComponent render", this.props.src);
 
 		this.element = document.createElement("img") as HTMLImageElement;
 		this.applyBasicProperties();
