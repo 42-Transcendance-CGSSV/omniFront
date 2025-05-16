@@ -182,7 +182,7 @@ class HomePage extends Page {
 
             const grid: DivComponent = new DivComponent({
                 id: "features-grid",
-                className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-y-10 sm:gap-x-4 gap-x-10",
+                className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-items-center gap-y-6 gap-x-4",
                 children: featuresCards
             });
 
@@ -190,12 +190,12 @@ class HomePage extends Page {
                 type: "h2",
                 id: "features-title",
                 text: "Features of Game",
-                className: "w-full text-center text-lavender pb-10 xl:pb-18 2xl:pb-24text-3xl md:text-xl lg:text-2xl 2xl:text-4xl font-bold font-inter leading-tight select-none"
+                className: "w-full text-center text-lavender pb-10 xl:pb-18 text-base md:text-xl lg:text-2xl xl:text-3xl font-bold font-inter leading-tight select-none"
             });
 
             const container: DivComponent = new DivComponent({
                 id: "features-container",
-                className: "container mx-auto px-4 flex flex-col items-center",
+                className: "container mx-auto flex flex-col items-center",
                 children: [title, grid]
             });
 
