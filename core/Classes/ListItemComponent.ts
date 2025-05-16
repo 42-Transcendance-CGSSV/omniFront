@@ -13,6 +13,8 @@ export default class ListItemComponent extends AComponent<ListItemComponentProps
 
         if (this.props.href) {
             const link = document.createElement("a");
+            if (this.props.className)
+                link.className = this.props.className;
             link.setAttribute("href", this.props.href);
             link.textContent = this.props.text as string | null;
             this.element.appendChild(link);

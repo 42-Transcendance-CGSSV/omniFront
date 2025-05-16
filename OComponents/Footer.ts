@@ -23,7 +23,7 @@ export default class Footer {
         const copyrightText: TextComponent = new TextComponent({
             id: "copyright-text",
             text: "© 2024 FT_TRANSCENDANCE. All rights reserved.",
-            className: "text-white/60 text-sm font-normal font-inter leading-[21px] text-center"
+            className: "text-white/60 text-sm font-normal font-inter leading-[21px] text-center select-none"
         });
 
         const copyrightContainer: DivComponent = new DivComponent({
@@ -40,7 +40,7 @@ export default class Footer {
                 type: "li",
                 text: contact.text,
                 href: contact.url,
-                className: "text-white/80 text-base font-normal font-inter leading-normal"
+                className: "text-white/80 text-base font-normal font-inter leading-normal select-none"
             }));
         }
 
@@ -54,7 +54,7 @@ export default class Footer {
         const contactTitle: TextComponent = new TextComponent({
             id: "contact-title",
             text: "Contact",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2"
+            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
         });
 
         const contactContainer: DivComponent = new DivComponent({
@@ -70,7 +70,7 @@ export default class Footer {
                 type: "li",
                 text: link.text,
                 href: link.url,
-                className: "text-white/80 text-base font-normal font-inter leading-normal"
+                className: "text-white/80 text-base font-normal font-inter leading-normal select-none"
             }));
         }
 
@@ -84,7 +84,7 @@ export default class Footer {
         const linkTitle: TextComponent = new TextComponent({
             id: "link-title",
             text: "Quick Links",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2"
+            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
         });
 
         const linkContainer: DivComponent = new DivComponent({
@@ -96,12 +96,12 @@ export default class Footer {
         const aboutText: TextComponent = new TextComponent({
             id: "about-us-text",
             text: "We're passionate about bringing classic games to life with modern technology and design.",
-            className: "text-white/80 text-base font-normal font-inter leading-normal"
+            className: "text-white/80 text-base font-normal font-inter leading-normal select-none"
         });
         const aboutTitle: TextComponent = new TextComponent({
             id: "about-us-title",
             text: "About Us",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-4"
+            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-4 select-none"
         });
         const aboutContainer: DivComponent = new DivComponent({
             id: "about-us-container",

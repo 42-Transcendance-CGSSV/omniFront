@@ -190,7 +190,7 @@ class HomePage extends Page {
                 type: "h2",
                 id: "features-title",
                 text: "Features of Game",
-                className: "w-full text-center text-lavender pb-10 xl:pb-18 2xl:pb-24text-3xl md:text-xl lg:text-2xl 2xl:text-4xl font-bold font-inter leading-tight"
+                className: "w-full text-center text-lavender pb-10 xl:pb-18 2xl:pb-24text-3xl md:text-xl lg:text-2xl 2xl:text-4xl font-bold font-inter leading-tight select-none"
             });
 
             const container: DivComponent = new DivComponent({

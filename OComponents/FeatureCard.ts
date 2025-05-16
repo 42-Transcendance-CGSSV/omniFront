@@ -21,12 +21,12 @@ export default class FeatureCard {
 
     public build(): DivComponent {
 
-        const descriptionStyle = "text-white/80 text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-normal font-inter";
+        const descriptionStyle = "text-white/80 text-sm md:text-base lg:text-lg xl:text-xl 2xl:text-2xl font-normal font-inter select-none";
 
         const description: TextComponent = new TextComponent({className: descriptionStyle, text: this.description});
         const subtitle: TextComponent = new TextComponent({className: descriptionStyle, text: this.subtitle});
         const title: TextComponent = new TextComponent({
-            className: "h-fit text-lavender text-lg md:text-xl xl:text-2xl 2xl:text-3xl font-semibold font-inter leading-tight",
+            className: "h-fit text-lavender text-lg md:text-xl xl:text-2xl 2xl:text-3xl font-semibold font-inter leading-tight select-none",
             text: this.title,
             type: "h3"
         });
@@ -45,7 +45,7 @@ export default class FeatureCard {
 
         return new DivComponent({
             id: "feature-card-" + this.id,
-            className: "w-full md:w-[90%] bg-feature-background rounded-3xl border border-white/5 flex flex-col items-center justify-between p-6 aspect-square gap-y-8",
+            className: "w-full md:w-[90%] bg-feature-background hover:scale-105 transition-transform duration-300 rounded-3xl border border-white/5 flex flex-col items-center justify-between p-6 aspect-square gap-y-8",
             children: [svg, textContainer]
         });
     }
