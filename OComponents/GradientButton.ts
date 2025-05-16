@@ -44,6 +44,6 @@ export default class GradientButton {
             children: [borderDiv]
         });
 
-        return rootDiv.render()
+        return rootDiv;
     }
 }

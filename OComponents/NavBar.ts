@@ -99,7 +99,7 @@ export class NavBar extends AComponent {
 
         navLinksContainer.appendChild(navLinksList);
 
-        const loginButton = new GradientButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build();
+        const loginButton = new GradientButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build().render();
 
         navbarContainer.appendChild(logoContainer);
         navbarContainer.appendChild(navLinksContainer);
@@ -107,7 +107,6 @@ export class NavBar extends AComponent {
 
         navElement.appendChild(navbarContainer);
         this.element.appendChild(navElement);
-
 
         return this;
     }

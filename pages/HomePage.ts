@@ -7,6 +7,7 @@ import FeatureCard from "../OComponents/FeatureCard";
 import {AComponent} from "../core/Classes/AComponent";
 import axios from "axios";
 import Footer from "../OComponents/Footer";
+import GradientButton from "../OComponents/GradientButton";
 
 class HomePage extends Page {
 
@@ -31,6 +32,7 @@ class HomePage extends Page {
         this.setupPaddles(homeContainerElement)
         this.setupGameInstructions(homeContainerElement)
         this.setupFeatures().then(() => {
+            this.setupExplainations();
             document.getElementById("app")!.appendChild(new Footer().build().render().getElement()!)
         });
     }
@@ -202,6 +204,34 @@ class HomePage extends Page {
             document.getElementById("app")!.appendChild(container.render().getElement()!)
             return resolve();
         });
+    }
+
+    private setupExplainations(): void {
+
+        const containerTitle = new TextComponent({ id: "explaination-title", text: "How Our Game Works", className: "select-none text-[#bebfff] text-3xl sm:text-4xl md:text-5xl font-bold leading-tight" });
+        const containerSubtitle = new TextComponent({ id: "explaination-subtitle", text: "A Simple guide to the different parts that make our game run smoothly", className: "select-none text-white/80 text-base sm:text-lg md:text-xl leading-relaxed" });
+        const titlesContainer = new DivComponent({
+            id: "titles-container",
+            className: "max-w-3xl mx-auto flex flex-col items-center gap-4 text-center mb-16",
+            children: [containerTitle, containerSubtitle]
+        });
+
+        const higtlightedExample = new GradientButton("highlighted-example", "Gateway Service", { displayCondition: "inline", animation: "", borderColors: "bg-[#0f0823]/70 rounded-full shadow-[0px_0px_20px_rgba(123,109,255,0.6)] border-2 border-[#b794db]"});
+        const otherExemple = new GradientButton("unslected-exemple", "Other Example", { displayCondition: "inline", animation: "", borderColors: "bg-darkblue-950 rounded-full border-2 border-subwhite"});
+        const tagsContainer = new DivComponent({ id: "tag-container", className: "flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mb-20", children: [higtlightedExample.build(), otherExemple.build()] });
+
+        const boxTitle = new TextComponent({ id: "box-title", type: "h2", className: "select-none text-white text-xl sm:text-2xl font-bold", text: "Service Explanation" });
+        const boxDescription = new TextComponent({ id: "box-description", className: "select-none text-white/80 py-6 text-base sm:text-lg leading-loose w-full px-10", text: "Explain how the service works." });
+        const boxBackground = new DivComponent({ id: "box-container", className: "w-full h-fit flex flex-col justify-center items-center rounded-3xl bg-feature-background border border-white/5", children: [boxDescription] });
+        const explainationContainer = new DivComponent({ id: "explaination-container", className: "w-[60%] mx-auto flex flex-col items-center gap-6 text-center", children: [titlesContainer, tagsContainer, boxTitle, boxBackground] });
+
+        const microserviceTitle = new TextComponent({ id: "microservice-title", className: "select-none text-white text-xl sm:text-2xl font-bold", text: "How They All Work Together" });
+        const microserviceDescription = new TextComponent({ id: "microservice-description", className: "select-none text-white/80 py-6 text-base sm:text-lg leading-loose w-full px-10", text: "Imagine these services as different departments in a company. They each have their specific job, but they work together seamlessly to create your complete gaming experience. When you play, these services communicate with each other instantly to make everything happen smoothly." });
+        const microserviceBox = new DivComponent({ id: "microservice-box", className: "w-full h-fit flex flex-col justify-center items-center rounded-3xl bg-feature-background border border-white/5", children: [microserviceDescription] });
+        const microserviceContainer = new DivComponent({ id: "microservice-container", className: "w-[60%] mx-auto flex flex-col items-center gap-6 text-center", children: [microserviceTitle, microserviceBox] });
+
+        const sectionContainer = new DivComponent({ id: "section-container", className: "flex flex-col h-fit w-full px-4 py-8 gap-y-8 lg:gap-y-28 items-center justify-center", children: [explainationContainer, microserviceContainer] });
+        document.getElementById("app")!.appendChild(sectionContainer.render().getElement()!)
     }
 
 
