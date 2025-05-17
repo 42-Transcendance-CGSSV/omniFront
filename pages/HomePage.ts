@@ -5,8 +5,8 @@ import {ButtonComponent} from "@classes/ButtonComponent";
 import {AComponent} from "@classes/AComponent";
 import FeatureCard from "@components/FeatureCard";
 import GradientButton from "@components/GradientButton";
-import axios from "axios";
 import Footer from "@components/Footer";
+import axios from "axios";
 
 class HomePage extends Page {
 
@@ -128,13 +128,13 @@ class HomePage extends Page {
     }
 
     private buildPaddles(): DivComponent[] {
-        const paddleStyle = "hidden lg:block w-3 h-32 2xl:h-48 absolute top-1/2 -mt-16 bg-[#b794db] rounded-md shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)]"
+        const paddleStyle = "[8%] hidden lg:block w-3 h-32 2xl:h-48 absolute top-1/2 -mt-16 bg-[#b794db] rounded-md shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)]"
         return [new DivComponent({
             id: "paddle-left",
-            className: paddleStyle + " left-[8%] animate-paddle-move-1"
+            className: `left-${paddleStyle} animate-paddle-move-1`
         }), new DivComponent({
             id: "paddle-right",
-            className: paddleStyle + " right-[8%] animate-paddle-move-2"
+            className: `right-${paddleStyle} animate-paddle-move-2`
         })];
     }
 
@@ -183,16 +183,24 @@ class HomePage extends Page {
 
     private buildExplainations(): DivComponent {
 
+        const baseTextClass = "select-none";
+        const titleTextClass = `${baseTextClass} text-white text-xl sm:text-2xl font-bold`;
+        const descriptionTextClass = `${baseTextClass} text-white/80 py-6 text-base sm:text-lg leading-loose w-full px-10`;
+        const sectionContainerClass = "w-[60%] mx-auto flex flex-col items-center gap-6 text-center";
+        const boxContainerClass = "w-full h-fit flex flex-col justify-center items-center rounded-3xl bg-feature-background border border-white/5";
+
         const containerTitle = new TextComponent({
             id: "explaination-title",
             text: "How Our Game Works",
-            className: "select-none text-[#bebfff] text-3xl sm:text-4xl md:text-5xl font-bold leading-tight"
+            className: `${baseTextClass} text-[#bebfff] text-3xl sm:text-4xl md:text-5xl font-bold leading-tight`
         });
+
         const containerSubtitle = new TextComponent({
             id: "explaination-subtitle",
             text: "A Simple guide to the different parts that make our game run smoothly",
-            className: "select-none text-white/80 text-base sm:text-lg md:text-xl leading-relaxed"
+            className: `${baseTextClass} text-white/80 text-base sm:text-lg md:text-xl leading-relaxed`
         });
+
         const titlesContainer = new DivComponent({
             id: "titles-container",
             className: "max-w-3xl mx-auto flex flex-col items-center gap-4 text-center mb-16",
@@ -204,57 +212,65 @@ class HomePage extends Page {
             animation: "",
             borderColors: "bg-[#0f0823]/70 rounded-full shadow-[0px_0px_20px_rgba(123,109,255,0.6)] border-2 border-[#b794db]"
         });
-        const otherExemple = new GradientButton("unslected-exemple", "Other Example", {
+
+        const otherExample = new GradientButton("unslected-example", "Other Example", {
             displayCondition: "inline",
             animation: "",
             borderColors: "bg-darkblue-950 rounded-full border-2 border-subwhite"
         });
+
         const tagsContainer = new DivComponent({
             id: "tag-container",
             className: "flex flex-wrap justify-center gap-4 max-w-5xl mx-auto mb-20",
-            children: [higtlightedExample.build(), otherExemple.build()]
+            children: [higtlightedExample.build(), otherExample.build()]
         });
 
         const boxTitle = new TextComponent({
             id: "box-title",
             type: "h2",
-            className: "select-none text-white text-xl sm:text-2xl font-bold",
+            className: titleTextClass,
             text: "Service Explanation"
         });
+
         const boxDescription = new TextComponent({
             id: "box-description",
-            className: "select-none text-white/80 py-6 text-base sm:text-lg leading-loose w-full px-10",
+            className: descriptionTextClass,
             text: "Explain how the service works."
         });
+
         const boxBackground = new DivComponent({
             id: "box-container",
-            className: "w-full h-fit flex flex-col justify-center items-center rounded-3xl bg-feature-background border border-white/5",
+            className: boxContainerClass,
             children: [boxDescription]
         });
+
         const explainationContainer = new DivComponent({
             id: "explaination-container",
-            className: "w-[60%] mx-auto flex flex-col items-center gap-6 text-center",
+            className: sectionContainerClass,
             children: [titlesContainer, tagsContainer, boxTitle, boxBackground]
         });
 
         const microserviceTitle = new TextComponent({
             id: "microservice-title",
-            className: "select-none text-white text-xl sm:text-2xl font-bold",
+            className: titleTextClass,
             text: "How They All Work Together"
         });
+
         const microserviceDescription = new TextComponent({
             id: "microservice-description",
-            className: "select-none text-white/80 py-6 text-base sm:text-lg leading-loose w-full px-10",
+            className: descriptionTextClass,
             text: "Imagine these services as different departments in a company. They each have their specific job, but they work together seamlessly to create your complete gaming experience. When you play, these services communicate with each other instantly to make everything happen smoothly."
         });
+
         const microserviceBox = new DivComponent({
             id: "microservice-box",
-            className: "w-full h-fit flex flex-col justify-center items-center rounded-3xl bg-feature-background border border-white/5",
+            className: boxContainerClass,
             children: [microserviceDescription]
         });
+
         const microserviceContainer = new DivComponent({
             id: "microservice-container",
-            className: "w-[60%] mx-auto flex flex-col items-center gap-6 text-center",
+            className: sectionContainerClass,
             children: [microserviceTitle, microserviceBox]
         });
 
@@ -263,6 +279,7 @@ class HomePage extends Page {
             className: "flex flex-col h-fit w-full px-4 py-8 gap-y-8 lg:gap-y-28 items-center justify-center",
             children: [explainationContainer, microserviceContainer]
         });
+
     }
 
 
