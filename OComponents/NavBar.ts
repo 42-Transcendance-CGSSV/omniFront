@@ -1,7 +1,7 @@
-import {AComponent, AComponentProps} from "../core/Classes/AComponent";
+import {AComponent, AComponentProps} from "@classes/AComponent";
 import GradientButton from "./GradientButton";
 
-export class NavBar extends AComponent {
+export default class NavBar extends AComponent {
 
     private navLinks: { url?: string, name: string }[];
 

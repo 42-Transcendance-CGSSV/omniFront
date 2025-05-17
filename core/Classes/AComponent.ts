@@ -35,11 +35,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
             return this;
         }
         this.rendered = true;
-        console.group(`Rendering ${this.props.id || this.constructor.name}`);
         console.debug(`Render appelé pour ${this.props.id}`);
-
-        const callerInfo = new Error().stack?.split('\n')[2] || 'Inconnu';
-        console.debug(`Appelé par: ${callerInfo}`);
 
         console.groupEnd();
         this.element = document.createElement("div");
@@ -165,6 +161,23 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
         }
 
         return this;
+    }
+
+    public addComponent(component: AComponent): void {
+        if (!this.props.children) {
+            this.props.children = [];
+        }
+        this.props.children.push(component);
+        console.log('Add component in component', this.props.id, 'with children:', this.props.children);
+    }
+
+    public addComponents(component: AComponent[]): void {
+        if (!this.props.children) {
+            this.props.children = [];
+        }
+        this.props.children.push.apply(this.props.children, component);
+        console.log('Add components in component', this.props.id, 'with children:', this.props.children);
+
     }
 
     /**
