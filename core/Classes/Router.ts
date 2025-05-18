@@ -2,14 +2,14 @@ import {Page} from "./Page.js";
 
 type Route = {
     path: string;
-    component: () => Promise<any>;
+    component: () => any;
 };
 
 export class Router {
     private routes: Route[] = [];
     private container: HTMLElement | null = null;
     private currentComponent: any = null;
-    private notFoundComponent: (() => Promise<any>) | null = null;
+    private notFoundComponent: (() => any) | null = null;
     private firstLoad: boolean = true;
 
     /**
@@ -88,7 +88,7 @@ export class Router {
     /**
      * Gère le changement de route en fonction de l'URL actuelle
      */
-    private async handleRouteChange(): Promise<void> {
+    private handleRouteChange(): void {
         const path = window.location.pathname;
         const route = this.findMatchingRoute(path);
 
@@ -102,7 +102,7 @@ export class Router {
             }
 
             try {
-                const Component = await route.component();
+                const Component = route.component();
                 const params = this.extractRouteParams(route.path, path);
 
                 // Check if the component is a Page
@@ -129,10 +129,10 @@ export class Router {
                 }
             } catch (error) {
                 console.error('Error loading component:', error);
-                await this.handleNotFound();
+                this.handleNotFound();
             }
         } else {
-            await this.handleNotFound();
+            this.handleNotFound();
         }
     }
 
@@ -199,7 +199,7 @@ export class Router {
     /**
      * Gère le cas où aucune route ne correspond (404)
      */
-    private async handleNotFound(): Promise<void> {
+    private handleNotFound(): void {
         // Vide le conteneur
         if (this.container) {
             this.container.innerHTML = '';
@@ -208,7 +208,7 @@ export class Router {
         // Si un composant 404 a été défini, l'affiche
         if (this.notFoundComponent && this.container) {
             try {
-                const NotFoundComponent = await this.notFoundComponent();
+                const NotFoundComponent = this.notFoundComponent();
                 this.currentComponent = new NotFoundComponent();
                 this.currentComponent.render();
                 this.currentComponent.mount(this.container);
