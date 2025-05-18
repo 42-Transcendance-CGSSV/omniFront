@@ -1,4 +1,4 @@
-import { Router } from "./core/Classes/Router.js";
+import { Router } from "@classes/Router";
 
 const routes = new Router("#app");
 

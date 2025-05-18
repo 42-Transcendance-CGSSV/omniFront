@@ -1,4 +1,4 @@
-import { Page } from "../core/Classes/Page.js";
+import { Page } from "@classes/Page";
 import HomePage from "./HomePage.js";
 import AboutPage from "./AboutPage.js";
 import ImagePage from "./ImagePage.js";

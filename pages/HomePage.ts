@@ -7,6 +7,7 @@ import FeatureCard from "@components/FeatureCard";
 import GradientButton from "@components/GradientButton";
 import Footer from "@components/Footer";
 import axios from "axios";
+import NavBar from "@components/NavBar";
 
 class HomePage extends Page {
 
@@ -15,7 +16,7 @@ class HomePage extends Page {
      * Initializes the page with a navigation bar and a content container.
      */
     constructor() {
-        super("PongPage");
+        super("PongPage", new NavBar({}));
         const homeContainer = new DivComponent({
             id: "home-content",
             className: "w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden",

@@ -2,6 +2,10 @@
 @import url("https://fonts.cdnfonts.com/css/glacial-indifference-2");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Inter:opsz,wght@14..32,100..900&display=swap");
 
+body {
+    background-color: #0F0823;
+}
+
 @theme {
     --color-darkblue-50: oklch(0.95 0.0255 283.49);
     --color-darkblue-100: oklch(0.91 0.0464 282.76);

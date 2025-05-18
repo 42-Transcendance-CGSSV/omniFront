@@ -10,12 +10,13 @@ export class Router {
     private container: HTMLElement | null = null;
     private currentComponent: any = null;
     private notFoundComponent: (() => Promise<any>) | null = null;
+    private firstLoad: boolean = true;
 
     /**
      * Initialise le router avec un élément conteneur où les composants seront rendus
      * @param container Élément DOM ou sélecteur CSS du conteneur
      */
-    constructor(container: HTMLElement | string) {
+    public constructor(container: HTMLElement | string) {
         // Si on reçoit un sélecteur CSS, on cherche l'élément correspondant
         if (typeof container === 'string') {
             this.container = document.querySelector(container);
@@ -106,20 +107,25 @@ export class Router {
 
                 // Check if the component is a Page
                 if (Component.prototype instanceof Page) {
-                    window.addEventListener('load', () => {
+                    if (this.firstLoad) {
+                        const loaderElement = window.document.getElementById("loader");
+                        window.addEventListener("DOMContentLoaded", () => {
+                            this.firstLoad = false;
+                            loaderElement!.classList.add("hidden");
+                            this.currentComponent = new Component();
+                            this.currentComponent.render();
+                        });
+                    } else {
                         this.currentComponent = new Component();
                         this.currentComponent.render();
-                    });
+                    }
 
                 } else {
-                    window.addEventListener('load', () => {
-                        this.currentComponent = new Component(params);
-                        this.currentComponent.render();
-                        if (this.container) {
-                            this.currentComponent.mount(this.container);
-                        }
-                    });
-
+                    this.currentComponent = new Component(params);
+                    this.currentComponent.render();
+                    if (this.container) {
+                        this.currentComponent.mount(this.container);
+                    }
                 }
             } catch (error) {
                 console.error('Error loading component:', error);
