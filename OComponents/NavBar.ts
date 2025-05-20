@@ -1,5 +1,6 @@
 import {AComponent, AComponentProps} from "@dcomponents/AComponent";
 import GradientButton from "./GradientButton";
+import {router} from "../routes";
 
 export default class NavBar extends AComponent {
 
@@ -11,7 +12,7 @@ export default class NavBar extends AComponent {
             {name: "Accueil"},
             {url: "/pong", name: "Pong"},
             {url: "/rgrgrg", name: "Discussions"},
-            {url: "/grggrg", name: "Github"},
+            {url: "https://github.com/42-Transcendance-CGSSV", name: "Github"},
         ];
         this.render();
     }
@@ -91,7 +92,7 @@ export default class NavBar extends AComponent {
             const listItem = document.createElement("li");
             listItem.className = "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear";
             const link = document.createElement("a");
-            link.href = this.navLinks.find(link => link.name === linkText)?.url || "#"; // Utiliser l'URL correspondante
+            link.href = this.navLinks.find(link => link.name === linkText)?.url || "/";
             link.textContent = linkText;
             listItem.appendChild(link);
             navLinksList.appendChild(listItem);
@@ -99,7 +100,7 @@ export default class NavBar extends AComponent {
 
         navLinksContainer.appendChild(navLinksList);
 
-        const loginButton = new GradientButton("login", "Connexion", { displayCondition: "hidden lg:inline" }).build().render();
+        const loginButton = new GradientButton("login", "Connexion", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("login")).render();
 
         navbarContainer.appendChild(logoContainer);
         navbarContainer.appendChild(navLinksContainer);

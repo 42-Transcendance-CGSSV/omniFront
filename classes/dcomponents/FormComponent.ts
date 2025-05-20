@@ -7,8 +7,9 @@ interface FormComponentProps extends AComponentProps {
 
 export default class FormComponent extends AComponent<FormComponentProps> {
 
-    public render() {
+    public render(): AComponent<FormComponentProps> {
         this.element = document.createElement("form");
+        super.render();
         this.applyBasicProperties();
 
         if (this.props.onSubmit) {

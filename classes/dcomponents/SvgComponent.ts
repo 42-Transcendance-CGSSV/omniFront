@@ -1,7 +1,9 @@
 import {AComponent, AComponentProps} from "./AComponent";
 
-interface SvgProps extends AComponentProps {
+
+export interface SvgProps extends AComponentProps {
     paths: string[];
+    fills?: string[];
 
     viewBox: string;
     width: string;
@@ -10,7 +12,6 @@ interface SvgProps extends AComponentProps {
 
 export default class SvgComponent extends AComponent<SvgProps> {
     public render(): AComponent<SvgProps> {
-        super.render();
 
         this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg") as unknown as HTMLElement;
         this.applyBasicProperties();
@@ -20,11 +21,14 @@ export default class SvgComponent extends AComponent<SvgProps> {
             this.element.setAttribute("height", this.props.height);
         }
         this.element.setAttribute("viewBox", this.props.viewBox);
-        this.props.paths.forEach(path => {
+        for (let i = 0; i < this.props.paths.length; i++) {
             const pathElement = document.createElementNS("http://www.w3.org/2000/svg", "path");
-            pathElement.setAttribute("d", path);
+            pathElement.setAttribute("d", this.props.paths[i]);
+            if (this.props.fills && this.props.fills.length >= i) {
+                pathElement.setAttribute("fill", this.props.fills[i]);
+            }
             this.element!.appendChild(pathElement);
-        })
+        }
 
         return this;
     }

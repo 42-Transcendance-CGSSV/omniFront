@@ -3,10 +3,13 @@ import {AComponent, AComponentProps} from './AComponent';
 export interface TextFieldComponentState {
     isValid: boolean;
     errorMessage?: string
-    replaceHtml?: string
+    sanitizedInput?: string
 }
 
-interface TextFieldComponentProps extends AComponentProps {
+/*
+   Please never use element.value directly, if you want to get the value of the input field get the textFieldComponent.sanitizedInput
+ */
+export interface TextFieldComponentProps extends AComponentProps {
     type: "email" | "password" | "text" | "number" | "tel";
     autoComplete?: | "off" | "email" | "new-password" | "tel";
     placeholder?: string;
@@ -14,7 +17,7 @@ interface TextFieldComponentProps extends AComponentProps {
     minLength?: number;
     required?: boolean;
     disabled?: boolean;
-    onType?: () => TextFieldComponentState;
+    onType?: (state: TextFieldComponentState, element: HTMLInputElement) => void;
 }
 
 export default class TextFieldComponent extends AComponent<TextFieldComponentProps> {
@@ -32,11 +35,9 @@ export default class TextFieldComponent extends AComponent<TextFieldComponentPro
         if (this.props.disabled) this.element.setAttribute("disabled", "true");
 
         if (this.props.onType) {
-            this.addEventListener("type", () => {
+            this.addEventListener("input", () => {
                 const state = this.validateInput();
-                if (state.isValid) {
-                    this.props.onType!();
-                }
+                this.props.onType!(state, this.element as HTMLInputElement);
             });
         }
         return this;
@@ -54,7 +55,7 @@ export default class TextFieldComponent extends AComponent<TextFieldComponentPro
             return {isValid: false, errorMessage: "This field is required."};
         }
 
-        input.value = this.sanitizeInput(input.value);
+        const sanitizedInput: string = this.sanitizeInput(input.value);
 
         if (this.props.minLength && input.value.length < this.props.minLength) {
             return {
@@ -103,7 +104,7 @@ export default class TextFieldComponent extends AComponent<TextFieldComponentPro
                 break;
         }
 
-        return {isValid: true};
+        return {isValid: true, sanitizedInput: sanitizedInput};
     }
 
 

@@ -35,12 +35,10 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
             return this;
         }
         this.rendered = true;
-        console.debug(`Render appelé pour ${this.props.id}`);
-
-        console.groupEnd();
-        this.element = document.createElement("div");
-        this.applyBasicProperties();
-
+        if (!this.element) {
+            this.element = document.createElement("div");
+            this.applyBasicProperties();
+        }
         if (this.props.children) {
             const renderChildren = (children: AComponent[], parentElement: HTMLElement | null) => {
                 if (!parentElement) return;
