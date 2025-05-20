@@ -4,10 +4,11 @@ import AboutPage from "./pages/AboutPage";
 import ImagePage from "./pages/ImagePage";
 import PongPage from "./pages/PongPage";
 import UserProfilePage from "./pages/UserProfilePage";
-import LoginPage from "@pages/auth/LoginPage";
+import SignInPage from "@pages/auth/SignInPage";
+import SignUpPage from "@pages/auth/SignUpPage";
 
 // Configuration des routes
-const router = new Router("#app");
+export const router = new Router("#app");
 router
     .addRoute({
         path: "/",
@@ -15,7 +16,11 @@ router
     })
     .addRoute({
         path: "/login",
-        component: () => LoginPage,
+        component: () => SignInPage,
+    })
+    .addRoute({
+        path: "signup",
+        component: () => SignUpPage,
     })
     .addRoute({
         path: "/about",
