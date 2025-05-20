@@ -4,6 +4,7 @@ import AboutPage from "./pages/AboutPage";
 import ImagePage from "./pages/ImagePage";
 import PongPage from "./pages/PongPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import LoginPage from "@pages/auth/LoginPage";
 
 // Configuration des routes
 const router = new Router("#app");
@@ -11,6 +12,10 @@ router
     .addRoute({
         path: "/",
         component: () => HomePage,
+    })
+    .addRoute({
+        path: "/login",
+        component: () => LoginPage,
     })
     .addRoute({
         path: "/about",
