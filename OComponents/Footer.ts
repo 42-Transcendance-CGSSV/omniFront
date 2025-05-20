@@ -1,8 +1,8 @@
-import {DivComponent} from "../core/Classes/DivComponent";
-import {TextComponent} from "../core/Classes/TextComponent";
-import {AComponent} from "../core/Classes/AComponent";
-import ListComponent from "../core/Classes/ListComponent";
-import ListItemComponent from "../core/Classes/ListItemComponent";
+import {AComponent} from "@dcomponents/AComponent";
+import DivComponent from "@dcomponents/DivComponent";
+import TextComponent from "@dcomponents/TextComponent";
+import ListComponent from "@dcomponents/ListComponent";
+import ListItemComponent from "@dcomponents/ListItemComponent";
 
 export default class Footer {
 

@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "./AComponent.js";
+import { AComponent, AComponentProps } from "./AComponent";
 
 interface CanvaComponentProps extends AComponentProps {
 	id: string;
@@ -7,7 +7,7 @@ interface CanvaComponentProps extends AComponentProps {
 	onClick?: () => void;
 }
 
-export class CanvaComponent extends AComponent<CanvaComponentProps> {
+export default class CanvaComponent extends AComponent<CanvaComponentProps> {
 	public render(): CanvaComponent {
 		this.element = document.createElement("canvas");
 		this.applyBasicProperties();

@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "./AComponent.js";
+import { AComponent, AComponentProps } from "./AComponent";
 
 interface ButtonComponentProps extends AComponentProps {
 	id: string;
@@ -7,7 +7,7 @@ interface ButtonComponentProps extends AComponentProps {
 	onClick?: () => void;
 }
 
-export class ButtonComponent extends AComponent<ButtonComponentProps> {
+export default class ButtonComponent extends AComponent<ButtonComponentProps> {
 	public render(): ButtonComponent {
 		this.element = document.createElement("button");
 		this.applyBasicProperties();

@@ -1,11 +1,11 @@
-import {Page} from "./Page.js";
+import Page from "./Page";
 
 type Route = {
     path: string;
     component: () => any;
 };
 
-export class Router {
+export default class Router {
     private routes: Route[] = [];
     private container: HTMLElement | null = null;
     private currentComponent: any = null;

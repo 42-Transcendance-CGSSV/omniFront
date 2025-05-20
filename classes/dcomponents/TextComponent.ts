@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent.js';
+import {AComponent, AComponentProps} from './AComponent';
 
 interface TextComponentProps extends AComponentProps {
     text: string;
@@ -6,7 +6,7 @@ interface TextComponentProps extends AComponentProps {
     onClick?: () => void;
 }
 
-export class TextComponent extends AComponent<TextComponentProps> {
+export default class TextComponent extends AComponent<TextComponentProps> {
     public render(): TextComponent {
         this.element = document.createElement(!this.props.type ? "p" : this.props.type);
         this.applyBasicProperties();

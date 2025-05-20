@@ -1,5 +1,5 @@
-import {ButtonComponent} from "../core/Classes/ButtonComponent";
-import {DivComponent} from "../core/Classes/DivComponent";
+import ButtonComponent from "@dcomponents/ButtonComponent";
+import DivComponent from "@dcomponents/DivComponent";
 
 export default class GradientButton {
     private readonly id: string;
@@ -38,12 +38,10 @@ export default class GradientButton {
         });
 
 
-        const rootDiv: DivComponent = new DivComponent({
+        return new DivComponent({
             id: "container-" + this.id,
             className: this.displayCondition + " " + this.animation,
             children: [borderDiv]
         });
-
-        return rootDiv;
     }
 }

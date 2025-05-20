@@ -1,6 +1,6 @@
-import {DivComponent} from "../core/Classes/DivComponent";
-import {TextComponent} from "../core/Classes/TextComponent";
-import SvgComponent from "../core/Classes/SvgComponent";
+import DivComponent from "@dcomponents/DivComponent";
+import TextComponent from "@dcomponents/TextComponent";
+import SvgComponent from "@dcomponents/SvgComponent";
 
 export default class FeatureCard {
 

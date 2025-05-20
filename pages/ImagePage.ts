@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
+import { AComponent, AComponentProps } from "@dcomponents/AComponent";
 
 
 interface ImagePage extends AComponentProps {
@@ -11,7 +11,7 @@ class ImagePage extends AComponent<ImagePage> {
 		this.element.innerHTML = `
             <div class="image-container">
                 <h1>Ma Belle Image</h1>
-                <img src="/assets/image.png" alt="Une belle image" class="responsive-image">
+                <img src="/src/assetssets/image.png" alt="Une belle image" class="responsive-image">
                 <p>Voici une magnifique image qui s'affiche sur notre nouvelle page !</p>
             </div>
         `;

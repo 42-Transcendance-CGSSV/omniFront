@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent.js';
+import {AComponent, AComponentProps} from './AComponent';
 
 interface ListItemComponentProps extends AComponentProps {
     type: "li" | "dl" | "dt" | "dd";

@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from "@classes/AComponent";
+import {AComponent, AComponentProps} from "@dcomponents/AComponent";
 import GradientButton from "./GradientButton";
 
 export default class NavBar extends AComponent {

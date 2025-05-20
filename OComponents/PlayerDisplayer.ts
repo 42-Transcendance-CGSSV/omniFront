@@ -1,5 +1,5 @@
-import { DivComponent } from "../core/Classes/DivComponent";
-import { ImgComponent } from "../core/Classes/ImgComponent";
+import DivComponent from "@dcomponents/DivComponent";
+import ImgComponent from "@dcomponents/ImgComponent";
 
 class PlayerDisplayer {
     private style: string = "rounded-lg px-4 py-2 flex items-center";

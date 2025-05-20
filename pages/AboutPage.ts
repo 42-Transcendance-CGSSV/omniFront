@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
+import { AComponent, AComponentProps } from "../classes/dcomponents/AComponent";
 
 interface AboutPageProps extends AComponentProps {
 	// Ajoutez ici les props spécifiques à AboutPage si nécessaire

@@ -5,7 +5,7 @@ interface ImgProps extends AComponentProps {
 	alt?: string;
 }
 
-export class ImgComponent extends AComponent<ImgProps> {
+export default class ImgComponent extends AComponent<ImgProps> {
 	public render(): AComponent<ImgProps> {
 
 		this.element = document.createElement("img") as HTMLImageElement;

@@ -1,6 +1,6 @@
-import { Page } from "../core/Classes/Page.js";
-import { DivComponent } from "../core/Classes/DivComponent";
-import { TextComponent } from "../core/Classes/TextComponent";
+import Page from "../classes/Page";
+import DivComponent from "../classes/dcomponents/DivComponent";
+import TextComponent from "../classes/dcomponents/TextComponent";
 import PlayerDisplayer from "../OComponents/PlayerDisplayer";
 
 class PongPage extends Page {

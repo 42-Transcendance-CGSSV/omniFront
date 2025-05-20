@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent.js';
+import {AComponent, AComponentProps} from './AComponent';
 
 interface ListComponentProps extends AComponentProps {
     type: "ul" | "ol";

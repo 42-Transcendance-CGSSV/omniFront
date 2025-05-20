@@ -7,7 +7,7 @@ import compression from "vite-plugin-compression";
 export default defineConfig({
     root: ".",
     build: {
-        outDir: "dist",
+        outDir: "build",
         sourcemap: true,
         minify: 'terser',
         terserOptions: {
@@ -22,10 +22,12 @@ export default defineConfig({
         open: false,
     },
     resolve: {
-        extensions: [".js", ".ts", ".jsx", ".tsx", ".json"],
+        extensions: [".js", ".ts", ".jsx", ".json"],
         alias: {
             '@components': path.resolve(__dirname, './OComponents'),
-            '@classes': path.resolve(__dirname, './core/Classes'),
+            '@classes': path.resolve(__dirname, './classes'),
+            '@dcomponents': path.resolve(__dirname, './classes/dcomponents'),
+            '@pages': path.resolve(__dirname, './pages'),
         }
     },
     plugins: [

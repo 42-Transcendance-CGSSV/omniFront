@@ -1,13 +1,13 @@
-import {Page} from "@classes/Page";
-import {DivComponent} from "@classes/DivComponent";
-import {TextComponent} from "@classes/TextComponent";
-import {ButtonComponent} from "@classes/ButtonComponent";
-import {AComponent} from "@classes/AComponent";
+import {AComponent} from "@dcomponents/AComponent";
+import Page from "@classes/Page";
+import DivComponent from "@dcomponents/DivComponent";
+import TextComponent from "@dcomponents/TextComponent";
+import ButtonComponent from "@dcomponents/ButtonComponent";
+import NavBar from "@components/NavBar";
 import FeatureCard from "@components/FeatureCard";
 import GradientButton from "@components/GradientButton";
 import Footer from "@components/Footer";
 import axios from "axios";
-import NavBar from "@components/NavBar";
 
 class HomePage extends Page {
 
@@ -129,13 +129,12 @@ class HomePage extends Page {
     }
 
     private buildPaddles(): DivComponent[] {
-        const paddleStyle = "[8%] hidden lg:block w-3 h-32 2xl:h-48 absolute top-1/2 -mt-16 bg-[#b794db] rounded-md shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)]"
         return [new DivComponent({
             id: "paddle-left",
-            className: `left-${paddleStyle} animate-paddle-move-1`
+            className: `left-[8%] hidden lg:block w-3 h-32 2xl:h-48 absolute top-1/2 -mt-16 bg-[#b794db] rounded-md shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)] animate-paddle-move-1`
         }), new DivComponent({
             id: "paddle-right",
-            className: `right-${paddleStyle} animate-paddle-move-2`
+            className: `right-[8%] hidden lg:block w-3 h-32 2xl:h-48 absolute top-1/2 -mt-16 bg-[#b794db] rounded-md shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)] animate-paddle-move-2`
         })];
     }
 

@@ -1,4 +1,4 @@
-import { AComponent, AComponentProps } from "../core/Classes/AComponent.js";
+import { AComponent, AComponentProps } from "@dcomponents/AComponent";
 
 
 interface NotFoundPageProps extends AComponentProps {

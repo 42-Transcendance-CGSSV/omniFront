@@ -1,6 +1,6 @@
-import {AComponent} from "./AComponent.js";
+import {AComponent} from "@dcomponents/AComponent";
 
-export class Page {
+export default class Page {
     protected name: string;
     protected components: AComponent[];
 
