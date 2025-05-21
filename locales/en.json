@@ -1,0 +1,10 @@
+{
+	"nav": {
+		"pong": "Pong",
+		"home": "Home",
+		"github": "Github",
+		"discussions": "Discussions",
+		"login": "Login",
+		"language": "Language"
+	}
+}
