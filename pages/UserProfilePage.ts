@@ -4,6 +4,7 @@ import Footer from "@components/Footer";
 import PlayerDisplayer from "@components/PlayerDisplayer";
 import DivComponent from "@dcomponents/DivComponent";
 import TextComponent from "@dcomponents/TextComponent";
+import ProgressBarComponent from "@dcomponents/ProgressBarComponent";
 import axios from "axios";
 
 interface UserProfilePageProps {
@@ -37,9 +38,9 @@ class UserProfilePage extends Page {
 			losses: 53
 		};
 		const achievements = [
-			{ title: "First Victory", description: "Win your first game" },
-			{ title: "Win Streak", description: "Win 5 games in a row" },
-			{ title: "Champion", description: "Reach top of leaderboard" }
+			{ title: "First Victory", description: "Win your first game", progress: 100 },
+			{ title: "Win Streak", description: "Win 5 games in a row", progress: 60 },
+			{ title: "Champion", description: "Reach top of leaderboard", progress: 25 }
 		];
 		const matches = [
 			{
@@ -134,6 +135,16 @@ class UserProfilePage extends Page {
 								new TextComponent({
 									text: ach.description,
 									className: "text-white/70 text-sm"
+								}),
+								new ProgressBarComponent({
+									progress: ach.progress,
+									height: "10px",
+									width: "100%",
+									backgroundColor: "#333333",
+									progressColor: "#8A5CF5",
+									showText: true,
+									currentValue: ach.progress,
+									textFormat: "{{current}}%"
 								})
 							]
 						}))
