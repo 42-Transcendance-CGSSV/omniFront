@@ -4,8 +4,7 @@ import Footer from "@components/Footer";
 import PlayerDisplayer from "@components/PlayerDisplayer";
 import DivComponent from "@dcomponents/DivComponent";
 import TextComponent from "@dcomponents/TextComponent";
-import ProgressBarComponent from "@dcomponents/ProgressBarComponent";
-import axios from "axios";
+import ProgressBarComponent from "@components/ProgressBarComponent";
 
 interface UserProfilePageProps {
 	id?: string;
@@ -144,7 +143,7 @@ class UserProfilePage extends Page {
 									progressColor: "#8A5CF5",
 									showText: true,
 									currentValue: ach.progress,
-									textFormat: "{{current}}%"
+									textContent: "{{current}}%"
 								})
 							]
 						}))
@@ -211,6 +210,7 @@ class UserProfilePage extends Page {
 		this.addComponent(statsSection);
 		this.addComponent(matchHistorySection);
 		this.addComponent(new Footer().build());
+		statsSection.
 	}
 }
 

@@ -1,9 +1,9 @@
-import Router from "./classes/Router";
-import HomePage from "./pages/HomePage";
-import AboutPage from "./pages/AboutPage";
-import ImagePage from "./pages/ImagePage";
-import PongPage from "./pages/PongPage";
-import UserProfilePage from "./pages/UserProfilePage";
+import Router from "@classes/Router";
+import HomePage from "@pages/HomePage";
+import AboutPage from "@pages/AboutPage";
+import ImagePage from "@pages/ImagePage";
+import PongPage from "@pages/PongPage";
+import UserProfilePage from "@pages/UserProfilePage";
 import SignInPage from "@pages/auth/SignInPage";
 import SignUpPage from "@pages/auth/SignUpPage";
 
