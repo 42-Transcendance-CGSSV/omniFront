@@ -6,8 +6,13 @@ import PongPage from "@pages/PongPage";
 import UserProfilePage from "@pages/UserProfilePage";
 import SignInPage from "@pages/auth/SignInPage";
 import SignUpPage from "@pages/auth/SignUpPage";
-import "./utils/i18n";
+import i18next from 'i18next';
+import {getLangFromCookie} from 'utils/lang';
 
+
+import en from './assets/locales/en.json';
+import fr from './assets/locales/fr.json';
+import es from './assets/locales/es.json';
 
 // Configuration des routes
 export const router = new Router("#app");
@@ -42,6 +47,19 @@ router
     })
     .setNotFoundComponent(() => HomePage);
 
-onload = () => {
-    router.start();
-}
+i18next.init({
+    lng: getLangFromCookie() || 'en',
+    fallbackLng: 'en',
+    resources: {
+        en: {translation: en},
+        fr: {translation: fr},
+        es: {translation: es},
+    },
+    interpolation: {
+        escapeValue: false,
+    },
+}).then(() => {
+    onload = () => {
+        router.start();
+    }
+});

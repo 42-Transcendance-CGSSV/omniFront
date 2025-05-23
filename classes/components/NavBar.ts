@@ -10,20 +10,18 @@ import TextElement from "@elements/TextElement";
 import ListElement from "@elements/ListElement";
 import ListItemElement from "@elements/ListItemElement";
 
+type Link = {
+    name: string;
+    url?: string;
+}
+
 export default class NavBar extends AElement {
 
-    private navLinks: { url?: string, name: string }[];
     private mobileIsOpen: boolean;
     private mobilesElements: string[];
 
     constructor(props: AComponentProps) {
         super(props);
-        this.navLinks = [
-            {name: "Accueil"},
-            {url: "/pong", name: "Pong"},
-            {url: "/rgrgrg", name: "Discussions"},
-            {url: "https://github.com/42-Transcendance-CGSSV", name: "Github"},
-        ];
         this.mobileIsOpen = false;
         this.mobilesElements = ["fixed", "top-0", "left-0", "w-50", "h-full", "bg-slate-900/20", "z-28", "backdrop-blur-md", "border-r", "border-slate-700/50", "py-14"];
         this.render();
@@ -32,6 +30,7 @@ export default class NavBar extends AElement {
         onscroll = () => this.closeMobileNavbar();
 
     }
+
     private closeMobileNavbar() {
         if (this.mobileIsOpen) {
             const navlinks = document.getElementById("navlinks-container");
@@ -113,16 +112,22 @@ export default class NavBar extends AElement {
             className: "flex flex-col lg:flex-row items-center justify-center gap-6 2xl:gap-9 text-barwhite text-xl font-glacial antialiased"
         });
 
-        const links = ["Accueil", "Pong", "Discussions", "Github"];
-        links.forEach(linkText => {
+        const links: Link[] = [
+            {name: "%nav.home%", url: "/"},
+            {name: "%nav.pong%", url: "/pong"},
+            {name: "%nav.github%", url: "https://github.com"},
+        ];
+
+        links.forEach(link => {
             const item = new ListItemElement({
-                type: "li", href: this.navLinks.find(link => link.name === linkText)?.url || "/",
-                text: linkText, className: "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear"
+                type: "li", href: link.url,
+                text: link.name,
+                className: "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear"
             })
             navLinksList.addComponent(item);
         });
 
-        const mobileLogin = new GradientButton("mobile-login", "Connexion", {
+        const mobileLogin = new GradientButton("mobile-login", "%nav.login%", {
             displayCondition: "lg:hidden",
             animation: ""
         }).build(() => router.navigate("/login"));
@@ -133,7 +138,7 @@ export default class NavBar extends AElement {
         navbarContainer.addComponent(logoContainer);
         navbarContainer.addComponent(navLinksContainer);
 
-        const loginButton = new GradientButton("login", "Connexion", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("/login"));
+        const loginButton = new GradientButton("login", "%nav.login%", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("/login"));
         navbarContainer.addComponent(loginButton);
 
         navElement.addComponent(navbarContainer);

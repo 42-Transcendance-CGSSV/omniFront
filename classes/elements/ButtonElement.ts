@@ -18,9 +18,7 @@ export default class ButtonElement extends AElement<ButtonComponentProps> {
         }
 
         if (this.props.text) {
-            if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) {
-                this.element.textContent = i18next.t(this.props.text.slice(1, -1));
-            }
+            if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) this.element.textContent = i18next.t(this.props.text.slice(1, -1));
             else this.element.textContent = this.props.text;
         }
         if (this.props.onClick) {
