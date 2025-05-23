@@ -109,12 +109,10 @@ export default class Router {
                 if (Component.prototype instanceof Page) {
                     if (this.firstLoad) {
                         const loaderElement = window.document.getElementById("loader");
-                        window.addEventListener("DOMContentLoaded", () => {
-                            this.firstLoad = false;
-                            loaderElement!.classList.add("hidden");
-                            this.currentComponent = new Component();
-                            this.currentComponent.render();
-                        });
+                        this.firstLoad = false;
+                        loaderElement!.classList.add("hidden");
+                        this.currentComponent = new Component();
+                        this.currentComponent.render();
                     } else {
                         this.currentComponent = new Component();
                         this.currentComponent.render();

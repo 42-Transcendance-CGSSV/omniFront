@@ -14,6 +14,7 @@ export default class NavBar extends AElement {
 
     private navLinks: { url?: string, name: string }[];
     private mobileIsOpen: boolean;
+    private mobilesElements: string[];
 
     constructor(props: AComponentProps) {
         super(props);
@@ -24,7 +25,22 @@ export default class NavBar extends AElement {
             {url: "https://github.com/42-Transcendance-CGSSV", name: "Github"},
         ];
         this.mobileIsOpen = false;
+        this.mobilesElements = ["fixed", "top-0", "left-0", "w-50", "h-full", "bg-slate-900/20", "z-28", "backdrop-blur-md", "border-r", "border-slate-700/50", "py-14"];
         this.render();
+
+        onresize = () => this.closeMobileNavbar();
+        onscroll = () => this.closeMobileNavbar();
+
+    }
+    private closeMobileNavbar() {
+        if (this.mobileIsOpen) {
+            const navlinks = document.getElementById("navlinks-container");
+            if (navlinks) {
+                navlinks.classList.remove(...this.mobilesElements);
+                navlinks.classList.add("hidden");
+            }
+            this.mobileIsOpen = false;
+        }
     }
 
     public render(): NavBar {
@@ -52,17 +68,13 @@ export default class NavBar extends AElement {
                 event.preventDefault();
                 const navlinks = document.getElementById("navlinks-container");
                 if (navlinks) {
-
                     if (!this.mobileIsOpen) {
                         navlinks.classList.remove("hidden", "w-full");
-                        navlinks.classList.add(
-                            "fixed", "top-0", "left-0", "w-50", "h-full",
-                            "bg-slate-900/20", "z-28", "backdrop-blur-md", "border-r",
-                            "border-slate-700/50", "py-14");
-                    } else {
-                        navlinks.classList.add("hidden");
+                        navlinks.classList.add(...this.mobilesElements);
+                        this.mobileIsOpen = true;
+                        return;
                     }
-                    this.mobileIsOpen = !this.mobileIsOpen;
+                    this.closeMobileNavbar();
                 }
             }
         });
@@ -110,7 +122,10 @@ export default class NavBar extends AElement {
             navLinksList.addComponent(item);
         });
 
-        const mobileLogin = new GradientButton("mobile-login", "Connexion", {displayCondition: "lg:hidden", animation: ""}).build(() => router.navigate("/login"));
+        const mobileLogin = new GradientButton("mobile-login", "Connexion", {
+            displayCondition: "lg:hidden",
+            animation: ""
+        }).build(() => router.navigate("/login"));
         navLinksList.addComponent(mobileLogin);
 
         navLinksContainer.addComponent(navLinksList);

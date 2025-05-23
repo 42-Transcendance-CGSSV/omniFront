@@ -38,4 +38,7 @@ router
         path: "/pong",
         component: () => PongPage,
     });
-router.start();
+
+onload = () => {
+    router.start();
+}
