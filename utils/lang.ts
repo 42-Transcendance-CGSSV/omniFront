@@ -5,4 +5,5 @@ export function getLangFromCookie(): string | undefined {
 
 export function setLangCookie(lang: string): void {
 	document.cookie = `lang=${encodeURIComponent(lang)}; path=/; max-age=31536000`;
+	window.location.reload();
 }

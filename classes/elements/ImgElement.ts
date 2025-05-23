@@ -3,6 +3,7 @@ import { AElement, AComponentProps } from "./AElement";
 interface ImgProps extends AComponentProps {
 	src: string;
 	alt?: string;
+	onClick?: () => void;
 }
 
 export default class ImgElement extends AElement<ImgProps> {
@@ -13,6 +14,11 @@ export default class ImgElement extends AElement<ImgProps> {
 
 		this.element.setAttribute("src", this.props.src);
 		this.element.setAttribute("alt", this.props.alt ?? "");
+
+		if (this.props.onClick) {
+			this.addEventListener("click", this.props.onClick as EventListener);
+		}
+
 
 		return this;
 	}

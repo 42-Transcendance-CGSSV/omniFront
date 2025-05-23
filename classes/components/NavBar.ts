@@ -9,6 +9,8 @@ import SvgElement from "@elements/SvgElement";
 import TextElement from "@elements/TextElement";
 import ListElement from "@elements/ListElement";
 import ListItemElement from "@elements/ListItemElement";
+import ImgElement from "@elements/ImgElement";
+import {setLangCookie} from "../../utils/lang";
 
 type Link = {
     name: string;
@@ -18,11 +20,13 @@ type Link = {
 export default class NavBar extends AElement {
 
     private mobileIsOpen: boolean;
+    private languageIsOpen: boolean;
     private mobilesElements: string[];
 
     constructor(props: AComponentProps) {
         super(props);
         this.mobileIsOpen = false;
+        this.languageIsOpen = false;
         this.mobilesElements = ["fixed", "top-0", "left-0", "w-50", "h-full", "bg-slate-900/20", "z-28", "backdrop-blur-md", "border-r", "border-slate-700/50", "py-14"];
         this.render();
 
@@ -120,7 +124,8 @@ export default class NavBar extends AElement {
 
         links.forEach(link => {
             const item = new ListItemElement({
-                type: "li", href: link.url,
+                type: "li",
+                href: link.url,
                 text: link.name,
                 className: "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear"
             })
@@ -131,6 +136,7 @@ export default class NavBar extends AElement {
             displayCondition: "lg:hidden",
             animation: ""
         }).build(() => router.navigate("/login"));
+
         navLinksList.addComponent(mobileLogin);
 
         navLinksContainer.addComponent(navLinksList);
@@ -138,10 +144,69 @@ export default class NavBar extends AElement {
         navbarContainer.addComponent(logoContainer);
         navbarContainer.addComponent(navLinksContainer);
 
-        const loginButton = new GradientButton("login", "%nav.login%", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("/login"));
-        navbarContainer.addComponent(loginButton);
+        const rightContainer = new DivElement({
+            id: "right-container",
+            className: "flex flex-row items-center justify-center animate-fade-left gap-y-12"
+        });
 
+        rightContainer.addComponent(new GradientButton("login", "%nav.login%", {
+            displayCondition: "hidden lg:inline",
+            animation: " "
+        }).build(() => router.navigate("/login")))
+
+
+        const languageSelector = new DivElement({
+            id: "lang-select",
+            className: "flex flex-col w-16 h-10 ml-4",
+        });
+
+        rightContainer.addComponent(languageSelector);
+
+        const frenchSelector = new ImgElement({
+            id: "french-selector",
+            className: "w-12 h-10",
+            src: "./assets/svg/france.svg",
+            onClick: () => {
+                const englishSelector = document.getElementById("english-selector");
+                const spanishSelector = document.getElementById("spanish-selector");
+
+                if (!this.languageIsOpen) {
+                    englishSelector!.classList.remove("hidden");
+                    spanishSelector!.classList.remove("hidden");
+                } else setLangCookie("fr");
+                this.languageIsOpen = !this.languageIsOpen;
+            }
+        });
+
+        const englishSelector = new ImgElement({
+            id: "english-selector",
+            className: "relative hidden w-12 h-10 ",
+            src: "./assets/svg/english.svg",
+            onClick: () => setLangCookie("en")
+        });
+
+
+        const spanishSelector = new ImgElement({
+            id: "spanish-selector",
+            className: "relative hidden w-12 h-10",
+            src: "./assets/svg/spain.svg",
+            onClick: () => setLangCookie("es")
+        });
+
+        const value = document.cookie.split("; ").find((row) => row.startsWith("lang="))?.split("=")[1];
+
+        if (value !== null) {
+            if (value == "en") languageSelector.addComponents([englishSelector, frenchSelector, spanishSelector]);
+            if (value === "fr") languageSelector.addComponents([frenchSelector, englishSelector, spanishSelector]);
+            if (value === "es") languageSelector.addComponents([spanishSelector, frenchSelector, englishSelector]);
+        } else {
+            languageSelector.addComponents([frenchSelector, englishSelector, spanishSelector]);
+        }
+
+
+        navbarContainer.addComponent(rightContainer);
         navElement.addComponent(navbarContainer);
+
         header.addComponent(navElement);
 
         this.element = header.render().getElement();
