@@ -1,11 +1,11 @@
 import i18next from 'i18next';
-import getLangFromCookie from './lang.ts';
+import { getLangFromCookie } from './lang';
 
 import en from '../locales/en.json';
 import fr from '../locales/fr.json';
 import es from '../locales/es.json';
 
-const i18n = i18next.init({
+i18next.init({
   lng: getLangFromCookie() || 'fr',
   fallbackLng: 'en',
   resources: {
@@ -18,4 +18,4 @@ const i18n = i18next.init({
   },
 });
 
-export default i18n;
+export default i18next;

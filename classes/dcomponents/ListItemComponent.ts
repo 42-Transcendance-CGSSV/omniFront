@@ -1,4 +1,5 @@
 import {AComponent, AComponentProps} from './AComponent';
+import i18next from "i18next";
 
 interface ListItemComponentProps extends AComponentProps {
     type: "li" | "dl" | "dt" | "dd";
@@ -18,9 +19,13 @@ export default class ListItemComponent extends AComponent<ListItemComponentProps
             link.setAttribute("href", this.props.href);
             link.textContent = this.props.text as string | null;
             this.element.appendChild(link);
-        } else if (this.props.text)
-            this.element.textContent = this.props.text;
-
+        } else if (this.props.text) {
+            if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) {
+                this.element.textContent = i18next.t(this.props.text.slice(1, -1));
+            }
+            else this.element.textContent = this.props.text;
+        }
+            
         return this;
     }
 }

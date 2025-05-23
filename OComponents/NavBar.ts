@@ -1,6 +1,15 @@
 import {AComponent, AComponentProps} from "@dcomponents/AComponent";
 import GradientButton from "./GradientButton";
 import {router} from "../routes";
+import i18next from "i18next";
+import * as langFonctions from "../utils/lang";
+
+const SUPPORTED_LANGUAGES = [
+    { code: "fr", label: "Français" },
+    { code: "en", label: "English" },
+    { code: "es", label: "Español" }
+  ];
+  
 
 export default class NavBar extends AComponent {
 
@@ -9,7 +18,7 @@ export default class NavBar extends AComponent {
     constructor(props: AComponentProps) {
         super(props);
         this.navLinks = [
-            {name: "Accueil"},
+            {name: "Home"},
             {url: "/pong", name: "Pong"},
             {url: "/rgrgrg", name: "Discussions"},
             {url: "https://github.com/42-Transcendance-CGSSV", name: "Github"},
@@ -80,35 +89,89 @@ export default class NavBar extends AComponent {
         rightSpacerContainer.className = "w-10 lg:hidden"; // Même largeur que le bouton
         logoContainer.appendChild(rightSpacerContainer);
 
+
+
         const navLinksContainer = document.createElement("div");
         navLinksContainer.className = "hidden w-full md:w-auto lg:block";
-
         const navLinksList = document.createElement("ul");
         navLinksList.id = "nav-links";
         navLinksList.className = "flex flex-col lg:flex-row items-center justify-center gap-6 2xl:gap-9 text-barwhite text-xl font-glacial antialiased";
-
-        const links = ["Accueil", "Pong", "Discussions", "Github"];
-        links.forEach(linkText => {
+        this.navLinks.forEach(link => {
             const listItem = document.createElement("li");
             listItem.className = "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear";
-            const link = document.createElement("a");
-            link.href = this.navLinks.find(link => link.name === linkText)?.url || "/";
-            link.textContent = linkText;
-            listItem.appendChild(link);
+            const a = document.createElement("a");
+            a.href = link.url || "/";
+            // Utilise i18next pour traduire
+            a.textContent = i18next.t(`nav.${link.name.toLowerCase()}`) || link.name;
+            listItem.appendChild(a);
             navLinksList.appendChild(listItem);
         });
-
         navLinksContainer.appendChild(navLinksList);
 
-        const loginButton = new GradientButton("login", "Connexion", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("login")).render();
+        // Bouton de connexion
+        const loginButton = new GradientButton("login", "%nav.login%", { displayCondition: "hidden lg:inline" }) //Traduction fonctionnelle ! 
+        .build(() => router.navigate("login"))
+        .render();
 
-        navbarContainer.appendChild(logoContainer);
+        // Sélecteur de langue
+        const langSelector = document.createElement("select");
+        langSelector.className = "ml-4 px-2 py-1 rounded bg-darkblue-700 text-white";
+        SUPPORTED_LANGUAGES.forEach(lang => {
+        const option = document.createElement("option");
+        option.value = lang.code;
+        option.textContent = lang.label;
+        langSelector.appendChild(option);
+        });
+
+        // Sélectionne la langue courante
+        const currentLang = langFonctions.getLangFromCookie() || i18next.language || "fr";
+        langSelector.value = currentLang;
+
+        langSelector.addEventListener("change", (event) => {
+        const newLang = (event.target as HTMLSelectElement).value;
+        langFonctions.setLangCookie(newLang);
+        i18next.changeLanguage(newLang);
+        window.location.reload(); // Recharge la page pour tout mettre à jour
+        });
+
+        // Ajoute tout dans la navbar
         navbarContainer.appendChild(navLinksContainer);
         navbarContainer.appendChild(loginButton.getElement()!);
+        navbarContainer.appendChild(langSelector);
 
         navElement.appendChild(navbarContainer);
         this.element.appendChild(navElement);
 
         return this;
+        // const navLinksContainer = document.createElement("div");
+        // navLinksContainer.className = "hidden w-full md:w-auto lg:block";
+
+        // const navLinksList = document.createElement("ul");
+        // navLinksList.id = "nav-links";
+        // navLinksList.className = "flex flex-col lg:flex-row items-center justify-center gap-6 2xl:gap-9 text-barwhite text-xl font-glacial antialiased";
+
+        // const links = ["Accueil", "Pong", "Discussions", "Github"];
+        // links.forEach(linkText => {
+        //     const listItem = document.createElement("li");
+        //     listItem.className = "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear";
+        //     const link = document.createElement("a");
+        //     link.href = this.navLinks.find(link => link.name === linkText)?.url || "/";
+        //     link.textContent = linkText;
+        //     listItem.appendChild(link);
+        //     navLinksList.appendChild(listItem);
+        // });
+
+        // navLinksContainer.appendChild(navLinksList);
+
+        // const loginButton = new GradientButton("login", "Connexion", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("login")).render();
+
+        // navbarContainer.appendChild(logoContainer);
+        // navbarContainer.appendChild(navLinksContainer);
+        // navbarContainer.appendChild(loginButton.getElement()!);
+
+        // navElement.appendChild(navbarContainer);
+        // this.element.appendChild(navElement);
+
+        // return this;
     }
 }

@@ -6,6 +6,9 @@
 		"github": "Github",
 		"login": "Iniciar sesión",
 		"language": "Idioma"
+	},
+	"user": {
+		"achievements": "Logros"
 	}
 }
   

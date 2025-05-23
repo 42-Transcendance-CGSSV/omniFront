@@ -1,4 +1,5 @@
 import {AComponent, AComponentProps} from './AComponent';
+import i18next from "i18next";
 
 interface TextComponentProps extends AComponentProps {
     text: string;
@@ -10,7 +11,11 @@ export default class TextComponent extends AComponent<TextComponentProps> {
     public render(): TextComponent {
         this.element = document.createElement(!this.props.type ? "p" : this.props.type);
         this.applyBasicProperties();
-        this.element.textContent = this.props.text;
+
+        if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) {
+            this.element.textContent = i18next.t(this.props.text.slice(1, -1));
+        }
+        else this.element.textContent = this.props.text;
 
         if (this.props.onClick) {
             this.addEventListener("click", this.props.onClick as EventListener);
