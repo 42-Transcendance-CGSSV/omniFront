@@ -102,12 +102,12 @@ export default class SignInPage extends Page {
         const googleSignIn = new ButtonComponent({
             text: "Continue with Google",
             id: "sign-in-button",
-            className: "text-white font-semibold"
+            className: "text-white font-semibold disabled opacity-50"
         });
 
         const svgGoogle = new SvgComponent({
             id: "google-svg", width: "100%", viewBox: "0 0 21 20",
-            className: "mr-2 w-6 h-6 overflow-hidden",
+            className: "mr-2 w-6 h-6 overflow-hidden opacity-50",
             paths: ["M20.305 8.041H19.5V8h-9v4h5.651A5.998 5.998 0 0 1 4.5 10a6 6 0 0 1 6-6c1.53 0 2.921.577 3.98 1.52l2.83-2.83A9.954 9.954 0 0 0 10.5 0C4.978 0 .5 4.478.5 10c0 5.523 4.478 10 10 10 5.523 0 10-4.477 10-10 0-.67-.069-1.325-.195-1.959Z",
                 "m1.653 5.346 3.286 2.409A5.997 5.997 0 0 1 10.5 4c1.53 0 2.921.577 3.98 1.52l2.83-2.83A9.954 9.954 0 0 0 10.5 0a9.994 9.994 0 0 0-8.847 5.346Z",
                 "M10.5 20c2.583 0 4.93-.988 6.704-2.596l-3.095-2.619A5.955 5.955 0 0 1 10.5 16a5.997 5.997 0 0 1-5.642-3.973l-3.26 2.513C3.251 17.777 6.612 20 10.5 20Z",
@@ -116,10 +116,13 @@ export default class SignInPage extends Page {
 
         })
 
+        const notImplementedTooltip = new TextComponent({ id: "google-tooltip", type: "span", text: "Not Implemented Yet",
+            className: "group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-1 text-md rounded-md absolute left-1/2 -translate-x-1/2 opacity-0 m-4 mx-auto"})
+
         const googleContainer = new DivComponent({
             id: "google-container",
-            className: "flex flex-row items-center justify-center w-[80%] h-[52px] bg-white/2 rounded-xl border-2 border-white/7",
-            children: [svgGoogle, googleSignIn]
+            className: "group cursor-not-allowed flex flex-row items-center justify-center w-[80%] h-[52px] bg-white/2 rounded-xl border-2 border-white/7",
+            children: [svgGoogle, googleSignIn, notImplementedTooltip]
         });
 
 
