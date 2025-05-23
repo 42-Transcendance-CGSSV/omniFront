@@ -68,7 +68,7 @@ export default class Router {
      * Définit le composant à afficher quand aucune route ne correspond
      * @param component Fonction retournant le composant 404
      */
-    public setNotFoundComponent(component: () => Promise<any>): Router {
+    public setNotFoundComponent(component: any): Router {
         this.notFoundComponent = component;
         return this;
     }
@@ -203,13 +203,16 @@ export default class Router {
             this.container.innerHTML = '';
         }
 
+        const loaderElement = window.document.getElementById("loader");
+        loaderElement! .classList.add("hidden");
+
         // Si un composant 404 a été défini, l'affiche
         if (this.notFoundComponent && this.container) {
             try {
                 const NotFoundComponent = this.notFoundComponent();
                 this.currentComponent = new NotFoundComponent();
                 this.currentComponent.render();
-                this.currentComponent.mount(this.container);
+                //this.currentComponent.mount(this.container);
             } catch (error) {
                 console.error('Error loading not found component:', error);
                 if (this.container) {

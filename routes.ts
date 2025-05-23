@@ -37,7 +37,8 @@ router
     .addRoute({
         path: "/pong",
         component: () => PongPage,
-    });
+    })
+    .setNotFoundComponent(() => HomePage);
 
 onload = () => {
     router.start();
