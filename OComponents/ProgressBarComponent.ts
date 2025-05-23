@@ -1,9 +1,10 @@
 import {AComponent, AComponentProps} from '@dcomponents/AComponent';
 import DivComponent from "@dcomponents/DivComponent";
+import TextComponent from "@dcomponents/TextComponent";
 
 interface ProgressBarComponentProps extends AComponentProps {
-    currentValue?: number; // Current value (default: 0)
-    maxValue?: number; // Maximum value (default: 100)
+    currentValue: number; // Current value
+    maxValue: number; // Maximum value
 
     backgroundColor?: string; // Background bar color
     progressColor?: string; // Progress bar color
@@ -17,7 +18,6 @@ interface ProgressBarComponentProps extends AComponentProps {
 
 export default class ProgressBarComponent extends AComponent<ProgressBarComponentProps> {
 
-    private textElement: HTMLDivElement | null = null;
     private fillBar: DivComponent | null = null;
 
     public render(): ProgressBarComponent {
@@ -27,18 +27,16 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
 
         let buildTailwindRoot: string = "relative";
         buildTailwindRoot += this.props.width === null ? " w-full" : ` w-[${this.props.width}]`;
+        buildTailwindRoot += this.props.height === null ? " h-[20px]" : ` h-[${this.props.height}]`;
 
         const rootElement = new DivComponent({id: `progress-bar-${this.props.id}`, className: buildTailwindRoot});
 
-        let buildTailwindBgBar: string = "w-full rounded-sm";
-        buildTailwindBgBar += this.props.height === null ? " h-[20px]" : ` h-[${this.props.width}]`;
+        let buildTailwindBgBar: string = "w-full h-full rounded-sm";
         buildTailwindBgBar += this.props.backgroundColor === null ? " bg-red-400" : ` ${this.props.backgroundColor}`;
 
         const backgroundBar = new DivComponent({id: `progress-bar-${this.props.id}-bg`, className: buildTailwindBgBar})
-        rootElement.addComponent(backgroundBar);
 
-        let buildTailwindFillBar: string = "absolute top-0 left-0 rounded-sm";
-        buildTailwindFillBar += this.props.height === null ? " h-[20px]" : ` h-[${this.props.height}]`;
+        let buildTailwindFillBar: string = "absolute top-0 left-0 rounded-sm h-full";
         buildTailwindFillBar += this.props.backgroundColor === null ? " bg-red-800" : ` ${this.props.progressColor}`;
 
         this.fillBar = new DivComponent({id: `progress-bar-${this.props.id}-fill`, className: buildTailwindFillBar})
@@ -47,29 +45,29 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
         this.element = rootElement.render().getElement();
 
         // Calculate progress
-        this.updateProgress();
+        let progressPercent = this.updateProgress();
 
         // Create text element if showText is true
         if (this.props.showText) {
-            this.textElement = document.createElement("div");
-            this.textElement.style.position = "absolute";
-            this.textElement.style.top = "50%";
-            this.textElement.style.left = "50%";
-            this.textElement.style.transform = "translate(-50%, -50%)";
-            this.textElement.style.color = "#000";
-            this.textElement.style.fontSize = "12px";
-            this.textElement.style.fontWeight = "bold";
-            this.updateText();
-            this.element?.appendChild(this.textElement);
+
+            let textValue: string = this.props.textContent ? this.props.textContent.replace('{{current}}', this.props.currentValue.toString())
+                .replace('{{max}}', this.props.maxValue.toString()) : `${progressPercent}%`;
+
+            backgroundBar.addComponent(new TextComponent({
+                id: `progress-bar-${this.props.id}-percent`, type: "span", text: textValue,
+                className: "absolute inset-0 -inset-y-1 text-white text-bold text-center text-lg font-glacial"
+            }));
         }
 
+        rootElement.addComponent(backgroundBar);
+        rootElement.update();
         return this;
     }
 
     /**
      * Updates the progress bar width based on current progress
      */
-    private updateProgress(): void {
+    private updateProgress(): number {
         let progressPercent: number;
 
         if (this.props.currentValue && this.props.maxValue) {
@@ -78,32 +76,10 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
             progressPercent = 0;
         }
 
-        if (this.fillBar && this.fillBar.getElement())
-            this.fillBar.getElement()!.className += `w-[${progressPercent}%]`;
-        this.update();
-    }
-
-    /**
-     * Updates the text element with formatted progress text
-     */
-    private updateText(): void {
-        if (!this.textElement || this.props.showText !== true)
-            return;
-
-        const currentValue = this.props.currentValue ?? 0;
-        const maxValue = this.props.maxValue ?? 100;
-
-        let text: string;
-
-        if (this.props.textContent) {
-            text = this.props.textContent
-                .replace('{{current}}', currentValue.toString())
-                .replace('{{max}}', maxValue.toString());
-        } else {
-            text = `${currentValue}/${maxValue}`;
+        if (this.fillBar && this.fillBar.getElement()) {
+            this.fillBar.getElement()!.className += ` w-[${progressPercent}%]`;
         }
-
-        this.textElement.textContent = text;
+        return progressPercent;
     }
 
     /**
@@ -118,7 +94,6 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
         }
 
         this.updateProgress();
-        this.updateText();
     }
 
 }

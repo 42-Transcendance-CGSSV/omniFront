@@ -13,7 +13,7 @@ export interface AComponentProps {
  */
 export class AComponent<P extends AComponentProps = AComponentProps> {
     protected element: HTMLElement | undefined = undefined;
-    protected rendered: boolean = false;
+    public rendered: boolean = false;
     protected props: P;
     protected state: Record<string, any> = {};
     private eventListeners: Array<{ type: string; handler: EventListener }> = [];
@@ -93,20 +93,19 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
     /**
      * Met à jour le composant en fonction de son état actuel
      */
-    protected update(): void {
+    public update(): void {
         const oldElement = this.element;
-        if (!oldElement || !oldElement.parentElement) return;
+        if (!oldElement) return;
 
+        this.rendered = false;
         // Re-render le composant
         this.render();
 
         if (this.element && oldElement.parentElement) {
             // Remplace l'ancien élément par le nouveau
             oldElement.parentElement.replaceChild(this.element, oldElement);
-
-            // Réapplique les écouteurs d'événements
-            this.reapplyEventListeners();
         }
+        this.reapplyEventListeners();
     }
 
     /**
