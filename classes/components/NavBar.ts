@@ -10,7 +10,7 @@ import TextElement from "@elements/TextElement";
 import ListElement from "@elements/ListElement";
 import ListItemElement from "@elements/ListItemElement";
 import ImgElement from "@elements/ImgElement";
-import {setLangCookie} from "../../utils/lang";
+import {getLangFromCookie, setLangCookie} from "../../utils/lang";
 
 type Link = {
     name: string;
@@ -165,7 +165,7 @@ export default class NavBar extends AElement {
         const frenchSelector = new ImgElement({
             id: "french-selector",
             className: "w-12 h-10",
-            src: "./assets/svg/france.svg",
+            src: "/assets/svg/france.svg",
             onClick: () => {
                 const englishSelector = document.getElementById("english-selector");
                 const spanishSelector = document.getElementById("spanish-selector");
@@ -173,7 +173,9 @@ export default class NavBar extends AElement {
                 if (!this.languageIsOpen) {
                     englishSelector!.classList.remove("hidden");
                     spanishSelector!.classList.remove("hidden");
-                } else setLangCookie("fr");
+                } else {
+                    setLangCookie("fr");
+                }
                 this.languageIsOpen = !this.languageIsOpen;
             }
         });
@@ -181,7 +183,7 @@ export default class NavBar extends AElement {
         const englishSelector = new ImgElement({
             id: "english-selector",
             className: "relative hidden w-12 h-10 ",
-            src: "./assets/svg/english.svg",
+            src: "/assets/svg/english.svg",
             onClick: () => setLangCookie("en")
         });
 
@@ -189,11 +191,11 @@ export default class NavBar extends AElement {
         const spanishSelector = new ImgElement({
             id: "spanish-selector",
             className: "relative hidden w-12 h-10",
-            src: "./assets/svg/spain.svg",
+            src: "/assets/svg/spain.svg",
             onClick: () => setLangCookie("es")
         });
 
-        const value = document.cookie.split("; ").find((row) => row.startsWith("lang="))?.split("=")[1];
+        const value = getLangFromCookie();
 
         if (value !== null) {
             if (value == "en") languageSelector.addComponents([englishSelector, frenchSelector, spanishSelector]);
