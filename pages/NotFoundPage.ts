@@ -1,11 +1,11 @@
-import { AComponent, AComponentProps } from "@dcomponents/AComponent";
+import { AElement, AComponentProps } from "@elements/AElement";
 
 
 interface NotFoundPageProps extends AComponentProps {
 	// Ajoutez ici les props spécifiques à NotFoundPage si nécessaire
 }
 
-class NotFoundPage extends AComponent<NotFoundPageProps> {
+class NotFoundPage extends AElement<NotFoundPageProps> {
 	public render() {
 		this.element = document.createElement("div");
 		this.element.innerHTML = `

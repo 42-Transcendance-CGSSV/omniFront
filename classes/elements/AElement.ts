@@ -4,14 +4,14 @@
 export interface AComponentProps {
     id?: string;
     className?: string;
-    children?: AComponent[]; // Liste d'autres composants enfants
+    children?: AElement[]; // Liste d'autres composants enfants
     [key: string]: any; // Pour permettre des propriétés supplémentaires
 }
 
 /**
  * Classe de base pour créer des composants réutilisables
  */
-export class AComponent<P extends AComponentProps = AComponentProps> {
+export abstract class AElement<P extends AComponentProps = AComponentProps> {
     protected element: HTMLElement | undefined = undefined;
     public rendered: boolean = false;
     protected props: P;
@@ -30,7 +30,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
      * Crée l'élément DOM du composant
      * @returns Le composant lui-même (pour le chaînage)
      */
-    public render(): AComponent<P> {
+    public render(): AElement<P> {
         if (this.rendered) {
             return this;
         }
@@ -40,7 +40,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
             this.applyBasicProperties();
         }
         if (this.props.children) {
-            const renderChildren = (children: AComponent[], parentElement: HTMLElement | null) => {
+            const renderChildren = (children: AElement[], parentElement: HTMLElement | null) => {
                 if (!parentElement) return;
 
                 children.forEach(child => {
@@ -136,7 +136,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
      * @param parent - Élément parent dans lequel monter le composant
      * @returns Le composant lui-même (pour le chaînage)
      */
-    public mount(parent: HTMLElement | string): AComponent<P> {
+    public mount(parent: HTMLElement | string): AElement<P> {
         // Si on a fourni une chaîne, on cherche l'élément correspondant
         const parentElement =
             typeof parent === "string"
@@ -160,7 +160,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
         return this;
     }
 
-    public addComponent(component: AComponent): void {
+    public addComponent(component: AElement): void {
         if (!this.props.children) {
             this.props.children = [];
         }
@@ -168,7 +168,7 @@ export class AComponent<P extends AComponentProps = AComponentProps> {
         console.log('Add component in component', this.props.id, 'with children:', this.props.children);
     }
 
-    public addComponents(component: AComponent[]): void {
+    public addComponents(component: AElement[]): void {
         if (!this.props.children) {
             this.props.children = [];
         }

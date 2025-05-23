@@ -1,10 +1,10 @@
 import Page from "@classes/Page";
-import NavBar from "@components/NavBar";
-import Footer from "@components/Footer";
-import PlayerDisplayer from "@components/PlayerDisplayer";
-import DivComponent from "@dcomponents/DivComponent";
-import TextComponent from "@dcomponents/TextComponent";
-import ProgressBarComponent from "@components/ProgressBarComponent";
+import NavBar from "@classes/components/NavBar";
+import Footer from "@classes/components/Footer";
+import PlayerDisplayer from "@classes/components/PlayerDisplayer";
+import DivElement from "@elements/DivElement";
+import TextElement from "@elements/TextElement";
+import ProgressBarComponent from "@classes/components/ProgressBarComponent";
 
 interface UserProfilePageProps {
     id?: string;
@@ -69,18 +69,18 @@ class UserProfilePage extends Page {
         ];
 
         // Profil utilisateur (avatar, nom, email)
-        const profileSection = new DivComponent({
+        const profileSection = new DivElement({
             className: "flex flex-col md:flex-row items-center gap-8 bg-white/5 rounded-3xl p-8 mb-8 w-full max-w-4xl mx-auto",
             children: [
                 new PlayerDisplayer(user.avatarUrl).build(),
-                new DivComponent({
+                new DivElement({
                     className: "flex flex-col gap-2 items-start",
                     children: [
-                        new TextComponent({
+                        new TextElement({
                             text: user.name,
                             className: "text-3xl font-bold text-white flex items-center gap-2"
                         }),
-                        new TextComponent({
+                        new TextElement({
                             text: user.email,
                             className: "text-lg text-white/70"
                         })
@@ -90,49 +90,49 @@ class UserProfilePage extends Page {
         });
 
         // Statistiques
-        const statsSection = new DivComponent({
+        const statsSection = new DivElement({
             className: "flex flex-col md:flex-row gap-8 w-full max-w-4xl mx-auto mb-8",
             children: [
-                new DivComponent({
+                new DivElement({
                     className: "flex-1 bg-white/5 rounded-2xl p-6 flex flex-col gap-2",
                     children: [
-                        new TextComponent({
+                        new TextElement({
                             text: "Statistics",
                             className: "text-xl font-semibold text-lavender mb-2"
                         }),
-                        new TextComponent({
+                        new TextElement({
                             text: `${stats.games} Games`,
                             className: "text-3xl font-bold text-white"
                         }),
-                        new TextComponent({
+                        new TextElement({
                             text: `${stats.winRate}% Win Rate`,
                             className: "text-xl text-white/80"
                         }),
-                        new TextComponent({
+                        new TextElement({
                             text: `${stats.wins} Wins`,
                             className: "text-lg text-emerald-400"
                         }),
-                        new TextComponent({
+                        new TextElement({
                             text: `${stats.losses} Losses`,
                             className: "text-lg text-red-400"
                         })
                     ]
                 }),
-                new DivComponent({
+                new DivElement({
                     className: "flex-1 bg-white/5 rounded-2xl p-6 flex flex-col gap-2",
                     children: [
-                        new TextComponent({
+                        new TextElement({
                             text: "Achievements",
                             className: "text-xl font-semibold text-lavender mb-2"
                         }),
-                        ...achievements.map((ach: any) => new DivComponent({
+                        ...achievements.map((ach: any) => new DivElement({
                             className: "bg-white/10 rounded-xl p-3 mb-2 flex flex-col gap-1",
                             children: [
-                                new TextComponent({
+                                new TextElement({
                                     text: ach.title,
                                     className: "text-white font-bold"
                                 }),
-                                new TextComponent({
+                                new TextElement({
                                     text: ach.description,
                                     className: "text-white/70 text-sm"
                                 }),
@@ -154,10 +154,10 @@ class UserProfilePage extends Page {
         });
 
         // Historique des matchs
-        const matchHistorySection = new DivComponent({
+        const matchHistorySection = new DivElement({
             className: "w-full max-w-5xl mx-auto bg-white/5 rounded-3xl p-8 mb-8",
             children: [
-                new TextComponent({
+                new TextElement({
                     text: "Match History",
                     className: "text-2xl font-bold text-lavender mb-4"
                 }),
@@ -169,34 +169,34 @@ class UserProfilePage extends Page {
                     const loserName = player1IsWinner ? match.player2 : match.player1;
                     const loserScore = player1IsWinner ? match.score2 : match.score1;
 
-                    return new DivComponent({
+                    return new DivElement({
                         className: `flex flex-col md:flex-row items-center justify-between bg-white/10 rounded-xl p-4 mb-3 border-l-4 ${player1IsWinner ? (match.player1 === user.name ? 'border-emerald-400' : 'border-red-400') : (match.player2 === user.name ? 'border-emerald-400' : 'border-red-400')}`,
                         children: [
-                            new TextComponent({
+                            new TextElement({
                                 text: `${winnerName} (W)`,
                                 className: "text-lg font-bold text-emerald-400"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: `${winnerScore}`,
                                 className: "text-lg font-bold text-emerald-400"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: "vs",
                                 className: "text-white/60 text-base"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: `${loserName} (L)`,
                                 className: "text-lg font-bold text-red-400"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: `${loserScore}`,
                                 className: "text-lg font-bold text-red-400"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: `${match.date} - ${match.type}`,
                                 className: "text-white/70 text-sm"
                             }),
-                            new TextComponent({
+                            new TextElement({
                                 text: `Duration: ${match.duration} | Precision: ${match.precision}`,
                                 className: "text-white/60 text-xs"
                             })

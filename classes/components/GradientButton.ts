@@ -1,5 +1,5 @@
-import ButtonComponent from "@dcomponents/ButtonComponent";
-import DivComponent from "@dcomponents/DivComponent";
+import ButtonElement from "@elements/ButtonElement";
+import DivElement from "@elements/DivElement";
 
 export default class GradientButton {
     private readonly id: string;
@@ -23,22 +23,22 @@ export default class GradientButton {
             Object.assign(this, params);
     }
 
-    public build(clickListener?: () => void): DivComponent {
-        const buttonComponent: ButtonComponent = new ButtonComponent({
+    public build(clickListener?: () => void): DivElement {
+        const buttonComponent: ButtonElement = new ButtonElement({
             id: "button-" + this.id,
             onClick: clickListener,
             text: this.textContent,
             className: this.roundedValue + " " + this.interiorStyle + " " + this.textStyle + " cursor-pointer",
         });
 
-        const borderDiv = new DivComponent({
+        const borderDiv = new DivElement({
             id: "border-" + this.id,
             className: this.roundedValue + " " + this.borderColors + " " + this.borderWidth ,
             children: [buttonComponent],
         });
 
 
-        return new DivComponent({
+        return new DivElement({
             id: "container-" + this.id,
             className: this.displayCondition + " " + this.animation,
             children: [borderDiv]

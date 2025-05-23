@@ -1,10 +1,10 @@
-import { AComponent, AComponentProps } from "../classes/dcomponents/AComponent";
+import { AElement, AComponentProps } from "@elements/AElement";
 
 interface AboutPageProps extends AComponentProps {
 	// Ajoutez ici les props spécifiques à AboutPage si nécessaire
 }
 
-class AboutPage extends AComponent<AboutPageProps> {
+class AboutPage extends AElement<AboutPageProps> {
 	public render() {
 		this.element = document.createElement("div");
 		this.element.innerHTML = `

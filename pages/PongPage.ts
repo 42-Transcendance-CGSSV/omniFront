@@ -1,11 +1,11 @@
 import Page from "../classes/Page";
-import DivComponent from "../classes/dcomponents/DivComponent";
-import TextComponent from "../classes/dcomponents/TextComponent";
-import PlayerDisplayer from "../OComponents/PlayerDisplayer";
+import DivElement from "@elements/DivElement";
+import TextElement from "@elements/TextElement";
+import PlayerDisplayer from "@classes/components/PlayerDisplayer";
 
 class PongPage extends Page {
     constructor() {
-        const divtest = new DivComponent({ id: "divtest" });
+        const divtest = new DivElement({ id: "divtest" });
         super("PongPage", divtest);
         this.render()
 
@@ -19,7 +19,7 @@ class PongPage extends Page {
 
 
     private setupTitle(element: HTMLElement | null): void {
-        const title = new TextComponent({ text: "Pong Game", id: "title" });
+        const title = new TextElement({ text: "Pong Game", id: "title" });
         if (element) {
             title.render = function () {
                 this.element = document.createElement("h1");

@@ -24,9 +24,9 @@ export default defineConfig({
     resolve: {
         extensions: [".js", ".ts", ".jsx", ".json"],
         alias: {
-            '@components': path.resolve(__dirname, './OComponents'),
+            '@elements': path.resolve(__dirname, './classes/elements'),
             '@classes': path.resolve(__dirname, './classes'),
-            '@dcomponents': path.resolve(__dirname, './classes/dcomponents'),
+            '@components': path.resolve(__dirname, './classes/components'),
             '@pages': path.resolve(__dirname, './pages'),
         }
     },

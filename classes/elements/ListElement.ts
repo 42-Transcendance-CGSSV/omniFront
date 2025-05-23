@@ -1,11 +1,11 @@
-import {AComponent, AComponentProps} from './AComponent';
+import {AElement, AComponentProps} from './AElement';
 
 interface ListComponentProps extends AComponentProps {
     type: "ul" | "ol";
 }
 
-export default class ListComponent extends AComponent<ListComponentProps> {
-    public render(): ListComponent {
+export default class ListElement extends AElement<ListComponentProps> {
+    public render(): ListElement {
         this.element = document.createElement(this.props.type);
         this.applyBasicProperties();
         return this;

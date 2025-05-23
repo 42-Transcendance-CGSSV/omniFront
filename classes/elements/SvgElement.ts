@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from "./AComponent";
+import {AElement, AComponentProps} from "./AElement";
 
 
 export interface SvgProps extends AComponentProps {
@@ -10,8 +10,8 @@ export interface SvgProps extends AComponentProps {
     height?: string;
 }
 
-export default class SvgComponent extends AComponent<SvgProps> {
-    public render(): AComponent<SvgProps> {
+export default class SvgElement extends AElement<SvgProps> {
+    public render(): AElement<SvgProps> {
 
         this.element = document.createElementNS("http://www.w3.org/2000/svg", "svg") as unknown as HTMLElement;
         this.applyBasicProperties();

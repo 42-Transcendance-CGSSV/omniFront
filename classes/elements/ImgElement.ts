@@ -1,12 +1,12 @@
-import { AComponent, AComponentProps } from "./AComponent";
+import { AElement, AComponentProps } from "./AElement";
 
 interface ImgProps extends AComponentProps {
 	src: string;
 	alt?: string;
 }
 
-export default class ImgComponent extends AComponent<ImgProps> {
-	public render(): AComponent<ImgProps> {
+export default class ImgElement extends AElement<ImgProps> {
+	public render(): AElement<ImgProps> {
 
 		this.element = document.createElement("img") as HTMLImageElement;
 		this.applyBasicProperties();

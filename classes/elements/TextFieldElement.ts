@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent';
+import {AElement, AComponentProps} from './AElement';
 
 export interface TextFieldComponentState {
     isValid: boolean;
@@ -20,7 +20,7 @@ export interface TextFieldComponentProps extends AComponentProps {
     onType?: (state: TextFieldComponentState, element: HTMLInputElement) => void;
 }
 
-export default class TextFieldComponent extends AComponent<TextFieldComponentProps> {
+export default class TextFieldElement extends AElement<TextFieldComponentProps> {
 
     public render() {
         this.element = document.createElement("input");

@@ -1,10 +1,10 @@
-import {AComponent} from "@dcomponents/AComponent";
+import {AElement} from "@elements/AElement";
 
 export default class Page {
     protected name: string;
-    protected components: AComponent[];
+    protected components: AElement[];
 
-    constructor(name: string, ...components: AComponent[]) {
+    constructor(name: string, ...components: AElement[]) {
         this.name = name;
         this.components = components;
     }
@@ -23,12 +23,12 @@ export default class Page {
         }
     }
 
-    public addComponent(component: AComponent): void {
+    public addComponent(component: AElement): void {
         this.components.push(component);
         console.log('Add component in page', this.name, 'with components:', this.components);
     }
 
-    public removeComponent(component: AComponent): void {
+    public removeComponent(component: AElement): void {
         const index = this.components.indexOf(component);
         if (index !== -1) {
             this.components.splice(index, 1);

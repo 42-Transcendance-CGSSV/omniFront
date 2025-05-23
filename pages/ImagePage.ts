@@ -1,11 +1,11 @@
-import { AComponent, AComponentProps } from "@dcomponents/AComponent";
+import { AElement, AComponentProps } from "@elements/AElement";
 
 
 interface ImagePage extends AComponentProps {
 	// Ajoutez ici les props spécifiques à HomePage si nécessaire
 }
 
-class ImagePage extends AComponent<ImagePage> {
+class ImagePage extends AElement<ImagePage> {
 	public render() {
 		this.element = document.createElement("img");
 		this.element.innerHTML = `

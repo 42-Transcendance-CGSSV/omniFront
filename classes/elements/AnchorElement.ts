@@ -1,12 +1,12 @@
-import {AComponent, AComponentProps} from "@dcomponents/AComponent";
+import {AElement, AComponentProps} from "@elements/AElement";
 
 interface AnchorComponentProps extends AComponentProps {
     text: string;
     href?: string;
 }
 
-export default class AnchorComponent extends AComponent<AnchorComponentProps> {
-    public render(): AnchorComponent {
+export default class AnchorElement extends AElement<AnchorComponentProps> {
+    public render(): AnchorElement {
         this.element = document.createElement("a");
         this.applyBasicProperties();
         this.element.textContent = this.props.text;

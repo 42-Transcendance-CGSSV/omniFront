@@ -1,4 +1,4 @@
-import {AComponent, AComponentProps} from './AComponent';
+import {AElement, AComponentProps} from './AElement';
 
 interface ListItemComponentProps extends AComponentProps {
     type: "li" | "dl" | "dt" | "dd";
@@ -6,8 +6,8 @@ interface ListItemComponentProps extends AComponentProps {
     href?: string;
 }
 
-export default class ListItemComponent extends AComponent<ListItemComponentProps> {
-    public render(): ListItemComponent {
+export default class ListItemElement extends AElement<ListItemComponentProps> {
+    public render(): ListItemElement {
         this.element = document.createElement(this.props.type);
         this.applyBasicProperties();
 

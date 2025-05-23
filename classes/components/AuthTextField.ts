@@ -1,6 +1,6 @@
-import TextFieldComponent, {TextFieldComponentProps} from "@dcomponents/TextFieldComponent";
-import SvgComponent, {SvgProps} from "@dcomponents/SvgComponent";
-import DivComponent from "@dcomponents/DivComponent";
+import TextFieldElement, {TextFieldComponentProps} from "@elements/TextFieldElement";
+import SvgElement, {SvgProps} from "@elements/SvgElement";
+import DivElement from "@elements/DivElement";
 
 interface AuthTextFieldProps extends TextFieldComponentProps {
     svgProperties?: SvgProps;
@@ -14,8 +14,8 @@ export default class AuthTextField {
         this.properties = props;
     }
 
-    public build(): DivComponent {
-        const inputField = new TextFieldComponent({
+    public build(): DivElement {
+        const inputField = new TextFieldElement({
             id: this.properties.id + "-input",
             type: this.properties.type,
             placeholder: this.properties.placeholder,
@@ -29,7 +29,7 @@ export default class AuthTextField {
             }
         });
 
-        const inputContainer = new DivComponent({
+        const inputContainer = new DivElement({
             id: this.properties.id + "-container",
             className: "flex flex-row items-center justify-center bg-white/7 rounded-xl h-14",
             children: [inputField]
@@ -39,7 +39,7 @@ export default class AuthTextField {
         if (this.properties.svgProperties) {
             const svgProps = this.properties.svgProperties;
             svgProps.id = this.properties.id + "-icon";
-            const icon = new SvgComponent(svgProps);
+            const icon = new SvgElement(svgProps);
             inputContainer.addComponent(icon);
         }
 

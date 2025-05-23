@@ -38,10 +38,10 @@
         "*"
       ],
       "@components/*": [
-        "OComponents/*"
+        "classes/components/*"
       ],
-      "@dcomponents/*": [
-        "classes/dcomponents/*"
+      "@elements/*": [
+        "classes/elements/*"
       ],
       "@classes/*": [
         "classes/*"

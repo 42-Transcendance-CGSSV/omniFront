@@ -1,24 +1,24 @@
-import NavBar from "@components/NavBar";
-import Footer from "@components/Footer";
+import NavBar from "@classes/components/NavBar";
+import Footer from "@classes/components/Footer";
 import Page from "@classes/Page";
-import FormComponent from "@dcomponents/FormComponent";
-import {TextFieldComponentState} from "@dcomponents/TextFieldComponent";
-import {AComponent} from "@dcomponents/AComponent";
-import DivComponent from "@dcomponents/DivComponent";
-import TextComponent from "@dcomponents/TextComponent";
-import ButtonComponent from "@dcomponents/ButtonComponent";
-import AnchorComponent from "@dcomponents/AnchorComponent";
-import AuthTextField from "@components/AuthTextField";
+import FormElement from "@elements/FormElement";
+import {TextFieldComponentState} from "@elements/TextFieldElement";
+import {AElement} from "@elements/AElement";
+import DivElement from "@elements/DivElement";
+import TextElement from "@elements/TextElement";
+import ButtonElement from "@elements/ButtonElement";
+import AnchorElement from "@elements/AnchorElement";
+import AuthTextField from "@classes/components/AuthTextField";
 
 export default class SignInPage extends Page {
 
     public constructor() {
         super("SignInPage", new NavBar({}));
 
-        const rootContainer = new DivComponent({
+        const rootContainer = new DivElement({
             id: "root-container",
             className: "mt-2 md:mt-10 w-[80%] sm:w-[55%] md:w-[45%] lg:w-[40%] xl:w-[30%] h-[80vh] mx-auto rounded-3xl outline outline-4 outline-white/5 flex flex-col items-center justify-center gap-8",
-            children: [new TextComponent({
+            children: [new TextElement({
                 id: "title",
                 type: "h1",
                 text: "Sign Up",
@@ -81,7 +81,7 @@ export default class SignInPage extends Page {
             }
         });
 
-        return new FormComponent({
+        return new FormElement({
             id: "login-form",
             className: "flex flex-col w-[80%] gap-4",
             onSubmit: (state: TextFieldComponentState) => {
@@ -91,47 +91,47 @@ export default class SignInPage extends Page {
         });
     }
 
-    public buildButtons(): AComponent {
-        const signInButton = new ButtonComponent({
+    public buildButtons(): AElement {
+        const signInButton = new ButtonElement({
             text: "Sign In",
             id: "sign-in-button",
             className: "w-[80%] h-[52px] mt-10 bg-[#0f0823]/80 rounded-[32px] border-2 border-[#b794db] shadow-[0px_0px_20px_0px_rgba(183,148,219,0.40)] text-white font-semibold"
         });
 
-        const spacerContainer = new DivComponent({
+        const spacerContainer = new DivElement({
             id: "spacer-container",
             className: "flex items-center justify-center gap-4 w-full max-w-[80%]",
             children: [
-                new DivComponent({className: "h-px bg-white/5 flex-1"}),
-                new TextComponent({
+                new DivElement({className: "h-px bg-white/5 flex-1"}),
+                new TextElement({
                     type: "span",
                     className: "text-white/40 text-base",
                     text: "or "
                 }),
-                new DivComponent({className: "h-px bg-white/5 flex-1"})],
+                new DivElement({className: "h-px bg-white/5 flex-1"})],
         })
 
-        const doNotHaveAccount = new TextComponent({
+        const doNotHaveAccount = new TextElement({
             id: "do-not-have-account",
             className: "text-white/60",
             type: "span",
             text: "Already have an account?",
         })
 
-        const signUpLink = new AnchorComponent({
+        const signUpLink = new AnchorElement({
             id: "signup-anchor",
             className: "text-[#b794db] text-lg font-semibold",
             href: "/login",
             text: "Sign In"
         })
 
-        const signUpContainer = new DivComponent({
+        const signUpContainer = new DivElement({
             id: "signup-container",
             className: "flex items-center justify-center gap-2 mt-2",
             children: [doNotHaveAccount, signUpLink]
         })
 
-        return new DivComponent({
+        return new DivElement({
             id: "buttons-container",
             className: "flex flex-col gap-4 w-full items-center justify-center",
             children: [signInButton, spacerContainer, signUpContainer]

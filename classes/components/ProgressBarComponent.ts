@@ -1,6 +1,6 @@
-import {AComponent, AComponentProps} from '@dcomponents/AComponent';
-import DivComponent from "@dcomponents/DivComponent";
-import TextComponent from "@dcomponents/TextComponent";
+import {AElement, AComponentProps} from '@elements/AElement';
+import DivElement from "@elements/DivElement";
+import TextElement from "@elements/TextElement";
 
 interface ProgressBarComponentProps extends AComponentProps {
     currentValue: number; // Current value
@@ -16,9 +16,9 @@ interface ProgressBarComponentProps extends AComponentProps {
     textContent?: string; // Text content, use the placeholders {{current}} and {{max}} to display the values.
 }
 
-export default class ProgressBarComponent extends AComponent<ProgressBarComponentProps> {
+export default class ProgressBarComponent extends AElement<ProgressBarComponentProps> {
 
-    private fillBar: DivComponent | null = null;
+    private fillBar: DivElement | null = null;
 
     public render(): ProgressBarComponent {
         // Create container element
@@ -29,17 +29,17 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
         buildTailwindRoot += this.props.width === null ? " w-full" : ` w-[${this.props.width}]`;
         buildTailwindRoot += this.props.height === null ? " h-[20px]" : ` h-[${this.props.height}]`;
 
-        const rootElement = new DivComponent({id: `progress-bar-${this.props.id}`, className: buildTailwindRoot});
+        const rootElement = new DivElement({id: `progress-bar-${this.props.id}`, className: buildTailwindRoot});
 
         let buildTailwindBgBar: string = "w-full h-full rounded-sm";
         buildTailwindBgBar += this.props.backgroundColor === null ? " bg-red-400" : ` ${this.props.backgroundColor}`;
 
-        const backgroundBar = new DivComponent({id: `progress-bar-${this.props.id}-bg`, className: buildTailwindBgBar})
+        const backgroundBar = new DivElement({id: `progress-bar-${this.props.id}-bg`, className: buildTailwindBgBar})
 
         let buildTailwindFillBar: string = "absolute top-0 left-0 rounded-sm h-full";
         buildTailwindFillBar += this.props.backgroundColor === null ? " bg-red-800" : ` ${this.props.progressColor}`;
 
-        this.fillBar = new DivComponent({id: `progress-bar-${this.props.id}-fill`, className: buildTailwindFillBar})
+        this.fillBar = new DivElement({id: `progress-bar-${this.props.id}-fill`, className: buildTailwindFillBar})
         rootElement.addComponent(this.fillBar);
 
         this.element = rootElement.render().getElement();
@@ -53,7 +53,7 @@ export default class ProgressBarComponent extends AComponent<ProgressBarComponen
             let textValue: string = this.props.textContent ? this.props.textContent.replace('{{current}}', this.props.currentValue.toString())
                 .replace('{{max}}', this.props.maxValue.toString()) : `${progressPercent}%`;
 
-            backgroundBar.addComponent(new TextComponent({
+            backgroundBar.addComponent(new TextElement({
                 id: `progress-bar-${this.props.id}-percent`, type: "span", text: textValue,
                 className: "absolute inset-0 -inset-y-1 text-white text-bold text-center text-lg font-glacial"
             }));
