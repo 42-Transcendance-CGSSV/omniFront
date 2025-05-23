@@ -3,6 +3,7 @@
     "@babel/parser": "^7.27.0",
     "@tailwindcss/postcss": "^4.1.6",
     "axios": "^1.9.0",
+    "i18next": "^23.0.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.6",
     "terser": "^5.39.2",

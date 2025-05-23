@@ -1,3 +1,4 @@
+import i18next from 'i18next';
 import {AElement, AComponentProps} from './AElement';
 
 export interface TextFieldComponentState {
@@ -29,7 +30,13 @@ export default class TextFieldElement extends AElement<TextFieldComponentProps> 
         this.element.setAttribute("type", this.props.type);
 
         if (this.props.autoComplete) this.element.setAttribute("autocomplete", this.props.autoComplete);
-        if (this.props.placeholder) this.element.setAttribute("placeholder", this.props.placeholder);
+        if (this.props.placeholder) {
+            if (this.props.placeholder.startsWith("%") && this.props.placeholder.endsWith("%")) {
+                this.element.setAttribute("placeholder", i18next.t(this.props.placeholder.slice(1, -1)) // Utilise i18next pour traduire);
+                } else {
+                    this.element.setAttribute("placeholder", this.props.placeholder);
+                }
+            }
         if (this.props.maxLength) this.element.setAttribute("maxlength", this.props.maxLength.toString());
         if (this.props.required) this.element.setAttribute("required", "true");
         if (this.props.disabled) this.element.setAttribute("disabled", "true");

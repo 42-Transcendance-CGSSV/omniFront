@@ -6,6 +6,8 @@ import PongPage from "@pages/PongPage";
 import UserProfilePage from "@pages/UserProfilePage";
 import SignInPage from "@pages/auth/SignInPage";
 import SignUpPage from "@pages/auth/SignUpPage";
+import "./utils/i18n";
+
 
 // Configuration des routes
 export const router = new Router("#app");
