@@ -1,44 +1,180 @@
-import Page from "../classes/Page";
-import DivElement from "@elements/DivElement";
-import TextElement from "@elements/TextElement";
-import PlayerDisplayer from "@classes/components/PlayerDisplayer";
+import {AComponent} from "@dcomponents/AComponent";
+import Page from "@classes/Page";
+import DivComponent from "@dcomponents/DivComponent";
+import TextComponent from "@dcomponents/TextComponent";
+import ButtonComponent from "@dcomponents/ButtonComponent";
+import NavBar from "@components/NavBar";
+import FeatureCard from "@components/FeatureCard";
+import GradientButton from "@components/GradientButton";
+import Footer from "@components/Footer";
+import axios from "axios";
+import CanvaComponent from "classes/dcomponents/CanvaComponent";
+import { c } from "node_modules/vite/dist/node/moduleRunnerTransport.d-DJ_mE5sf";
+let UPDATE_INTERVAL_MS = 17; // 60 FPS same as .env but fuck it 
+
+let isInActiveinterval = false;
+const BASE = 'http://localhost:3000/api';
+const BASEAI = 'http://localhost:3001/api';
+let polling = false;
+const gameid = prompt("game id :")
 
 class PongPage extends Page {
+    private homeContainer   :CanvaComponent;
+    private ctx             :CanvasRenderingContext2D;
+    private player1ID       !:string;
+    private player2ID       !:string;
+    
+    
     constructor() {
-        const divtest = new DivElement({ id: "divtest" });
-        super("PongPage", divtest);
-        this.render()
-
-        this.setupTitle(divtest.getElement()!)
-        this.drawPlayers(divtest.getElement()!)
+        super("PongPage", new NavBar({}));
+        this.homeContainer  = new CanvaComponent({id: "home-content", width: 800, height: 600, className: "w-[80%] h-[60%] sm:w-[60%] sm:h-[80%] sm:rotate-90 bg-black flex flex-col items-center justify-center p-4 overflow-hidden fixed inset-0 m-auto",});
+        this.ctx            = this.homeContainer.getContext();
+        const keysPressed   = new Set<string>();
+        
+        this.homeContainer.render();
+        
+        this.ctx?.canvas.setAttribute("tabindex", "0");
+        this.ctx?.canvas.addEventListener("keydown" , (event) => {
+            keysPressed.add(event.key);
+            if (this.ctx) {
+                this.requestApiUpdate(keysPressed);
+                // this.drawPaddles(this.ctx, this.player1pos, this.player2pos);
+            }
+        });
+        this.ctx?.canvas.addEventListener("keyup" , (event) => {
+            keysPressed.delete(event.key);
+        });
+        
+        if (this.ctx) {
+            this.getPositions();
+        }
+        
+        this.addComponent(this.homeContainer);
     }
-
-    render(): void {
-        super.render();
-    }
-
-
-    private setupTitle(element: HTMLElement | null): void {
-        const title = new TextElement({ text: "Pong Game", id: "title" });
-        if (element) {
-            title.render = function () {
-                this.element = document.createElement("h1");
-                this.element.textContent = "Pong Game";
-                return this;
-            };
-
-            title.mount(element);
+    
+    private requestApiUpdate(keysPressed: Set<string>) : void {
+        if (keysPressed.has("ArrowUp")) {
+            this.moveUp(this.player2ID);
+        }
+        if (keysPressed.has("ArrowDown")) {
+            this.moveDown(this.player2ID);
+        }
+        if (keysPressed.has("w")) {
+            this.moveUp(this.player1ID);
+        }
+        if (keysPressed.has("s")) {
+            this.moveDown(this.player1ID);
+        }
+        if (keysPressed.has("Escape")) {
+            this.stopGame();
+        }
+        if (keysPressed.has("Enter")) {
+            this.startGame();
         }
     }
 
-
-    private drawPlayers(element: HTMLElement | null): void {
-        const p1 = new PlayerDisplayer("./assets/image.png");
-        if (element) {
-            p1.build().mount(element);
+    
+    private drawGame(data: { ball: { ballX: number; ballY: number; ballRadius: number }; players: { PlayerID: string; playerColor: string; side: string; PaddlePos: number }[] }): void {
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        
+        
+        this.ctx.beginPath();
+        this.ctx.arc(data.ball.ballX, data.ball.ballY, data.ball.ballRadius, 0, Math.PI * 2);
+        this.ctx.fillStyle = "white";
+        this.ctx.fill();
+        
+        data.players.forEach(player => {
+            if (player.side === "left") {
+                this.player1ID = player.PlayerID;
+            }
+            else {
+                this.player2ID = player.PlayerID;
+            }
+            this.ctx.fillStyle = player.playerColor; 
+            const paddleWidth = 10;
+            const paddleHeight = 80;
+            const x = player.side === "left" ? 0 : this.ctx.canvas.width - paddleWidth;
+            this.ctx.fillRect(x, player.PaddlePos, paddleWidth, paddleHeight);
+        });
+    }
+    private getPositions() {
+        if (polling) 
+            return;
+        polling = true;
+        
+        const loop = () => {
+            fetch(`${BASE}/match/${gameid}`)
+            .then(res => res.json())
+            .then(data => {
+                this.drawGame(data);
+                if (data.isRunning) {
+                  this.MoveAIs(data);
+                }
+                setTimeout(loop, 17); 
+            })
+            .catch(error => {
+                console.error("Error fetching game data:", error);
+            });
         }
+        
+        loop(); 
+    }
+    private startGame() {
+        fetch(`${BASE}/startGame/${gameid}`, { method: 'PUT' })
+    }
+    private stopGame() {
+        fetch(`${BASE}/stopGame/${gameid}`, { method: 'PUT' })
+    }
+    private moveUp(playerID: string) {
+        fetch(`${BASE}/movePlayerUp/${playerID}`, {
+            method: 'POST' ,
+            headers : {'Content-Type': 'application/json'},
+            body: JSON.stringify({ playerID }),
+        })
+    }
+    
+    private moveDown(playerID: string) {  
+        fetch(`${BASE}/movePlayerDown/${playerID}`, { 
+            method: 'POST', 
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({playerID}),
+        })
     }
 
+    private async MoveAIs(data: { ball: { ballX: number; ballY: number; ballVelocityX: number; ballVelocityY: number }; players: { PlayerID: string; playerColor: string; side: string; PaddlePos: number; AI: boolean; PlayerName: string; numberOfGoals: number }[] }) {
+        // console.log(data);
+      
+        data.players.forEach(async player =>{
+            if (player.AI === true){
+              let res = await fetch(`${BASEAI}/train`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  playerID : player.PlayerName,
+                  ballX: data.ball.ballX,
+                  ballY: data.ball.ballY,
+                  ballSpeedX: data.ball.ballVelocityX,
+                  ballSpeedY: data.ball.ballVelocityY,
+                  myPosition: player.PaddlePos,
+                  PaddleHeight: '80',
+                  myScore:    player.numberOfGoals,
+                  mySide: `${player.side === 'left' ? 0.9 : 0.1}`
+                })
+              })
+              let readyRes = await res.json();
+              if (readyRes.move === 'up') {
+                // console.log(player.PlayerID);
+                this.moveUp(player.PlayerID);
+              }
+              else if (readyRes.move === 'down') {
+                this.moveDown(player.PlayerID);
+              }
+            }
+          })
+      
+      }
 }
 
 export default PongPage;
