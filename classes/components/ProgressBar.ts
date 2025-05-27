@@ -16,11 +16,11 @@ interface ProgressBarComponentProps extends AComponentProps {
     textContent?: string; // Text content, use the placeholders {{current}} and {{max}} to display the values.
 }
 
-export default class ProgressBarComponent extends AElement<ProgressBarComponentProps> {
+export default class ProgressBar extends AElement<ProgressBarComponentProps> {
 
     private fillBar: DivElement | null = null;
 
-    public render(): ProgressBarComponent {
+    public render(): ProgressBar {
         // Create container element
 
         this.applyBasicProperties();

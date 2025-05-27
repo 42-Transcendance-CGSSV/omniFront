@@ -43,7 +43,8 @@ input:-webkit-autofill {
     --color-subwhite: #b4b1bf;
 
     --color-feature-background: rgba(255, 255, 255, 0.018);
-    --color-lavender: #bebfff;
+    --color-blue-lavender: #bebfff;
+    --color-lavender: #b794db;
 
 
     --font-glacial: Glacial Indifference;

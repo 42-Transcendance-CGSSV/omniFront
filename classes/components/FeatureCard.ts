@@ -26,7 +26,7 @@ export default class FeatureCard {
         const description: TextElement = new TextElement({className: descriptionStyle, text: this.description});
         const subtitle: TextElement = new TextElement({className: descriptionStyle, text: this.subtitle});
         const title: TextElement = new TextElement({
-            className: "h-fit text-lavender text-lg md:text-xl xl:text-2xl font-semibold font-inter leading-tight select-none",
+            className: "h-fit text-blue-lavender text-lg md:text-xl xl:text-2xl font-semibold font-inter leading-tight select-none",
             text: this.title,
             type: "h3"
         });
@@ -37,7 +37,7 @@ export default class FeatureCard {
         })
 
         const svg: SvgElement = new SvgElement({
-            className: "hidden sm:inline fill-lavender stroke-lavender",
+            className: "hidden sm:inline fill-blue-lavender stroke-lavender",
             width: "100px",
             viewBox: "0 0 370 450",
             paths: this.paths

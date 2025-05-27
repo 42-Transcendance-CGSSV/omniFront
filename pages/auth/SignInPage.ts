@@ -23,7 +23,7 @@ export default class SignInPage extends Page {
                 id: "title",
                 type: "h1",
                 text: "Welcome back !",
-                className: "text-lg xl:text-4xl font-bold text-lavender mb-2"
+                className: "text-lg xl:text-4xl font-bold text-blue-lavender mb-2"
             })]
         });
 

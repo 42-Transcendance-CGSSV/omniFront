@@ -119,7 +119,7 @@ export default class NavBar extends AElement {
         const links: Link[] = [
             {name: "%nav.home%", url: "/"},
             {name: "%nav.pong%", url: "/pong"},
-            {name: "%nav.github%", url: "https://github.com"},
+            {name: "%nav.github%", url: "https://github.com/42-Transcendance-CGSSV"},
         ];
 
         links.forEach(link => {

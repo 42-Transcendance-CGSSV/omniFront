@@ -8,8 +8,11 @@ import FeatureCard from "@classes/components/FeatureCard";
 import GradientButton from "@classes/components/GradientButton";
 import Footer from "@classes/components/Footer";
 import axios from "axios";
+import CardMode from "@components/CardMode";
 
 class HomePage extends Page {
+
+    private gamesModalIsOpen: boolean = false;
 
     /**
      * Constructor for the HomePage class.
@@ -19,7 +22,7 @@ class HomePage extends Page {
         super("PongPage", new NavBar({}));
         const homeContainer = new DivElement({
             id: "home-content",
-            className: "w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden",
+            className: "w-full h-screen min-h-[650px] flex flex-col items-center justify-center p-4 overflow-hidden",
         });
 
         homeContainer.addComponent(this.buildTitles());
@@ -99,8 +102,30 @@ class HomePage extends Page {
                 id: "play-button",
                 text: "START GAME",
                 className: "px-8 py-3 bg-darkblue-950 rounded-[32px] shadow-[0px_0px_20px_0px_rgba(123,109,255,0.60)] outline-2 outline-offset-[-2px] outline-[#b794db] flex justify-center items-center text-barwhite text-lg md:text-xl lg:text-xl 2xl:text-2xl font-semibold font-poppins leading-normal select-none"
-            })]
+            })], onClick: () => {
+                this.toggleGamesModal();
+            }
         });
+    }
+
+    private toggleGamesModal(): void {
+        const appElement = document.getElementById("app");
+        if (!appElement) {
+            console.error("Unable to find the root element with id 'app'.");
+            return;
+        }
+
+        if (!this.gamesModalIsOpen) {
+            const modal = this.buildSelectGameModeModal();
+            appElement.appendChild(modal.render().getElement()!);
+            document.getElementById("features-container")!.classList.add("hidden");
+            document.getElementById("section-container")!.classList.add("hidden");
+        } else {
+            document.getElementById("gamemode-modal-container")!.remove();
+            document.getElementById("features-container")!.classList.remove("hidden");
+            document.getElementById("section-container")!.classList.remove("hidden");
+        }
+        this.gamesModalIsOpen = !this.gamesModalIsOpen;
     }
 
     private buildGameInstructions(): DivElement {
@@ -171,7 +196,7 @@ class HomePage extends Page {
             type: "h2",
             id: "features-title",
             text: "Features of Game",
-            className: "w-full text-center text-lavender pb-10 xl:pb-18 text-base md:text-xl lg:text-2xl xl:text-3xl font-bold font-inter leading-tight select-none"
+            className: "w-full text-center text-blue-lavender pb-10 xl:pb-18 text-base md:text-xl lg:text-2xl xl:text-3xl font-bold font-inter leading-tight select-none"
         });
 
         return new DivElement({
@@ -285,6 +310,64 @@ class HomePage extends Page {
 
     render(): void {
         super.render();
+    }
+
+
+    private buildSelectGameModeModal(): DivElement {
+
+        const modalContainer = new DivElement({
+            id: "gamemode-modal-container",
+            className: "fixed z-100 top-0 inset-0 w-screen bg-transparent backdrop-blur-md overflow-auto"
+        });
+
+        const modal = new DivElement({
+            id: "gamemode-modal",
+            className: "relative h-fit pb-10 lg:pb-0 lg:h-[70%] mt-[5%] w-[90%] max-w-5xl bg-darkblue-950 rounded-3xl border-3 border-white/10 flex flex-col items-center justify-center mx-auto"
+        });
+
+        modal.addComponent(new ButtonElement({
+            id: "close-modal-button",
+            className: "absolute top-4 right-4 text-white/80 text-3xl hover:text-white transition-colors",
+            text: "✕",
+            onClick: () => {
+                this.toggleGamesModal();
+            }
+        }));
+
+        const titleContainer = new DivElement({
+            id: "title-container",
+            className: "flex flex-col items-center text-center my-4 gap-y-2"
+        });
+        titleContainer.addComponents([new TextElement({
+            id: "modal-title",
+            text: "Select Game Mode",
+            className: "text-3xl sm:text-4xl lg:text-5xl font-bold text-[#bebfff]",
+            type: "h1"
+        }),
+            new TextElement({
+                id: "modal-subtitle",
+                text: "Choose your preferred way to play and challenge yourself",
+                className: "text-lg lg:text-xl text-[#bebfff] max-w-2xl",
+                type: "p"
+            })
+        ]);
+
+        modal.addComponent(titleContainer);
+
+        const flexContainer = new DivElement({
+            id: "modes-container",
+            className: "flex flex-wrap justify-center items-center my-4 lg:my-8 gap-4 lg:gap-6"
+        });
+
+        flexContainer.addComponent(new CardMode({id: "ia", title: "AI Game", description: "Challenge our intelligent AI opponent with adaptive difficulty levels.", icon: "assets/svg/pong/terminal.svg"}))
+        flexContainer.addComponent(new CardMode({id: "unranked", title: "Unranked Game", description: "Practice your skills in relaxed matches with no ranking pressure.", icon: "assets/svg/pong/terminal.svg"}))
+        flexContainer.addComponent(new CardMode({id: "ranked", title: "Ranked Game", description: "Skill-based matches where every point counts toward your rank.", icon: "assets/svg/pong/terminal.svg"}))
+
+        modal.addComponent(flexContainer);
+
+        modalContainer.addComponent(modal);
+
+        return modalContainer;
     }
 
 }
