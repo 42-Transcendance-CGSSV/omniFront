@@ -167,7 +167,12 @@ class PongPage extends Page {
             }
             this.getCtx().fillStyle = player.playerColor;
             const x = player.side === "left" ? 0 : this.getCtx().canvas.width - this.paddleWidth;
+            this.getCtx().shadowColor = 'rgba(184, 000, 45, 0.5)';
+            this.getCtx().shadowBlur = 10;
+            this.getCtx().shadowOffsetX = 5;
+            this.getCtx().shadowOffsetY = 5;
             this.getCtx().fillRect(x, this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) - this.paddleMiddle, this.paddleWidth, this.paddleHeight);
+            this.getCtx().shadowColor = 'transparent';
         });
     }
 
