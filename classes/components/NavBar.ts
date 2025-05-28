@@ -20,13 +20,11 @@ type Link = {
 export default class NavBar extends AElement {
 
     private mobileIsOpen: boolean;
-    private languageIsOpen: boolean;
     private mobilesElements: string[];
 
     constructor(props: AComponentProps) {
         super(props);
         this.mobileIsOpen = false;
-        this.languageIsOpen = false;
         this.mobilesElements = ["fixed", "top-0", "left-0", "w-50", "h-full", "bg-slate-900/20", "z-28", "backdrop-blur-md", "border-r", "border-slate-700/50", "py-14"];
         this.render();
 
@@ -162,49 +160,53 @@ export default class NavBar extends AElement {
 
         rightContainer.addComponent(languageSelector);
 
-        const frenchSelector = new ImgElement({
-            id: "french-selector",
-            className: "w-12 h-10",
-            src: "/assets/svg/france.svg",
+        const languages = [
+            { id: "french-selector", lang: "fr", src: "/assets/svg/france.svg" },
+            { id: "english-selector", lang: "en", src: "/assets/svg/english.svg" },
+            { id: "spanish-selector", lang: "es", src: "/assets/svg/spain.svg" },
+        ];
+
+        const dropdownContainer = new DivElement({
+            id: "lang-dropdown",
+            className: "absolute top-full mt-2 hidden bg-white rounded-lg shadow-lg z-5 flex flex-col items-center gap-2",
+        });
+
+        languages.forEach(({ id, lang, src }) => {
+            const flag = new ImgElement({
+                id,
+                className: "w-12 h-10 cursor-pointer hover:scale-105 transition-transform",
+                src,
+                onClick: () => {
+                    setLangCookie(lang);
+
+                    const mainFlagElement = mainFlag.getElement();
+                    if (mainFlagElement) {
+                        mainFlagElement.setAttribute("src", src);
+                    }
+
+                    const dropdownElement = dropdownContainer.getElement();
+                    if (dropdownElement) {
+                        dropdownElement.classList.add("hidden");
+                    }
+                },
+            });
+            dropdownContainer.addComponent(flag);
+        });
+
+        const currentLang = getLangFromCookie() || "fr";
+        const mainFlag = new ImgElement({
+            id: "main-flag",
+            className: "w-12 h-10 cursor-pointer relative",
+            src: languages.find(({ lang }) => lang === currentLang)?.src || "/assets/svg/france.svg",
             onClick: () => {
-                const englishSelector = document.getElementById("english-selector");
-                const spanishSelector = document.getElementById("spanish-selector");
-
-                if (!this.languageIsOpen) {
-                    englishSelector!.classList.remove("hidden");
-                    spanishSelector!.classList.remove("hidden");
-                } else {
-                    setLangCookie("fr");
+                const dropdown = dropdownContainer.getElement();
+                if (dropdown) {
+                    dropdown.classList.toggle("hidden");
                 }
-                this.languageIsOpen = !this.languageIsOpen;
-            }
+            },
         });
 
-        const englishSelector = new ImgElement({
-            id: "english-selector",
-            className: "relative hidden w-12 h-10 ",
-            src: "/assets/svg/english.svg",
-            onClick: () => setLangCookie("en")
-        });
-
-
-        const spanishSelector = new ImgElement({
-            id: "spanish-selector",
-            className: "relative hidden w-12 h-10",
-            src: "/assets/svg/spain.svg",
-            onClick: () => setLangCookie("es")
-        });
-
-        const value = getLangFromCookie();
-
-        if (value !== null) {
-            if (value == "en") languageSelector.addComponents([englishSelector, frenchSelector, spanishSelector]);
-            if (value === "fr") languageSelector.addComponents([frenchSelector, englishSelector, spanishSelector]);
-            if (value === "es") languageSelector.addComponents([spanishSelector, frenchSelector, englishSelector]);
-        } else {
-            languageSelector.addComponents([frenchSelector, englishSelector, spanishSelector]);
-        }
-
+        languageSelector.addComponents([mainFlag, dropdownContainer]);
 
         navbarContainer.addComponent(rightContainer);
         navElement.addComponent(navbarContainer);
