@@ -1,6 +1,7 @@
 import Page from "@classes/Page";
 import NavBar from "@components/NavBar";
 import CanvasElement from "@elements/CanvasElement";
+import DivElement from "classes/elements/DivElement";
 
 let UPDATE_INTERVAL_MS = 17; // 60 FPS same as .env but fuck it
 
@@ -25,11 +26,12 @@ class PongPage extends Page {
 
     constructor() {
         super("PongPage", new NavBar({}));
+
         this.canvasContainer = new CanvasElement({
-            id: "home-content",
-            width: 1800,
-            height: 1600,
-            className: "aspect-[4/3] w-full max-w-[800px]   bg-black flex flex-col items-center justify-center overflow-hidden fixed inset-0 m-auto ",
+            id: "game-content",
+            width: 1920,
+            height: 1800,
+            className: "absolute inset-0 top-[20%] max-h-[90%] max-w-[90%] pr-2 pl-2 outline-2 rounded-3xl outline-lavender mx-auto my-auto",
         });
 
         this.addComponent(this.canvasContainer);
@@ -48,6 +50,8 @@ class PongPage extends Page {
         this.paddleMiddle = this.paddleHeight / 2;
 
         this.getCtx()?.canvas.setAttribute("tabindex", "0");
+        this.canvasManager();
+
         this.getCtx()?.canvas.addEventListener("keydown", (event) => {
             keysPressed.add(event.key);
             if (this.getCtx()) {
@@ -165,31 +169,36 @@ class PongPage extends Page {
             } else {
                 this.player2ID = player.Player_id;
             }
-            this.getCtx().fillStyle = player.playerColor;
+            this.getCtx().fillStyle = '#B794DB';
             const x = player.side === "left" ? 0 : this.getCtx().canvas.width - this.paddleWidth;
-            this.getCtx().shadowColor = 'rgba(184, 000, 45, 0.5)';
+            this.getCtx().shadowColor = '#B794DB';
             this.getCtx().shadowBlur = 10;
-            this.getCtx().shadowOffsetX = 5;
-            this.getCtx().shadowOffsetY = 5;
+            // this.getCtx().shadowOffsetX = 5;
+            // this.getCtx().shadowOffsetY = 5;
+            // this.getCtx().
+
             this.getCtx().fillRect(x, this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) - this.paddleMiddle, this.paddleWidth, this.paddleHeight);
             this.getCtx().shadowColor = 'transparent';
         });
     }
 
     private canvasManager() {
-        const liveScreenwidth = this.getCtx().canvas.clientWidth;
-        const liveScreenHeight = this.getCtx().canvas.clientHeight;
-        // console.log("liveScreenwidth:", liveScreenwidth, "liveScreenHeight:", liveScreenHeight);
+        const liveScreenwidth = window.screen.width;
+        const liveScreenHeight = window.screen.height;
+        console.log("liveScreenwidth:", liveScreenwidth, "liveScreenHeight:", liveScreenHeight);
 
         if (this.getCtx().canvas.width !== liveScreenwidth || this.getCtx().canvas.height !== liveScreenHeight) {
-            this.getCtx().canvas.width = liveScreenwidth;
-            this.getCtx().canvas.height = liveScreenHeight;
-            // console.log("Canvas resized to:", liveScreenwidth, liveScreenHeight);
-            if (this.getCtx().canvas.width < 600 && this.getCtx().canvas.height < 450) {
-                this.getCtx().canvas.style.transform = "rotate(90deg)";
-                // console.log("Canvas rotated to 90 degrees :" ,this.getCtx().canvas.style.transform);
-            } else
+            
+            this.getCtx().canvas.width = (liveScreenwidth * 80) / 100;
+            this.getCtx().canvas.height = (liveScreenHeight * 80) / 100;
+            if (liveScreenwidth > 600 && ) {
                 this.getCtx().canvas.style.transform = "rotate(0deg)";
+            }
+            else {
+                this.getCtx().canvas.width = liveScreenwidth * 90;
+                this.getCtx().canvas.height = (liveScreenHeight * 75) / 100;
+                this.getCtx().canvas.style.transform = "rotate(90deg)";
+            }
         }
     }
 
@@ -199,6 +208,9 @@ class PongPage extends Page {
         polling = true;
 
         const loop = () => {
+
+            document.getElementById("game-content")!.focus();
+            this.getCtx()?.canvas.focus(); 
             ws.send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
 
             ws.onmessage = (event) => {
