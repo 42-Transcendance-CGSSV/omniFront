@@ -1,90 +1,102 @@
 import Page from "@classes/Page";
 import NavBar from "@components/NavBar";
-import CanvaComponent from "@elements/CanvaElement";
+import CanvasElement from "@elements/CanvasElement";
 
 let UPDATE_INTERVAL_MS = 17; // 60 FPS same as .env but fuck it
 
 let isInActiveinterval = false;
 const BASE = 'http://localhost:3000/api';
+const BASE_WS = 'http://localhost:3000/pong-ws';
 const BASEAI = 'http://localhost:3001/api';
 let polling = false;
-const gameid = 10;
+const gameid = 0;
+
+const ws = new WebSocket(`${BASE_WS}`);
 
 
 class PongPage extends Page {
-    private canva: CanvaComponent;
-    private ctx: CanvasRenderingContext2D;
-    private player1ID       !: string;
-    private player2ID       !: string;
-
-
-    private readonly REFERENCE_WIDTH: number = 800;
-    private readonly REFERENCE_HEIGHT: number = 450;
-
-    private scale = 1;
-    private gameWidth = 0;
-    private gameHeight = 0;
-
+    private canvasContainer: CanvasElement;
+    private ctx: CanvasRenderingContext2D | null = null;
+    private player1ID       !: number;
+    private player2ID       !: number;
+    private paddleWidth: number = 0;
+    private paddleHeight: number = 0;
+    private paddleMiddle: number = 0;
 
     constructor() {
         super("PongPage", new NavBar({}));
-        this.canva = new CanvaComponent({
-            id: "pong-canva",
-            width: this.REFERENCE_WIDTH,
-            height: this.REFERENCE_HEIGHT,
-            className: "bg-black/50 p-4 m-auto",
+        this.canvasContainer = new CanvasElement({
+            id: "home-content",
+            width: 1800,
+            height: 1600,
+            className: "aspect-[4/3] w-full max-w-[800px]   bg-black flex flex-col items-center justify-center overflow-hidden fixed inset-0 m-auto ",
         });
-        this.addComponent(this.canva);
+
+        this.addComponent(this.canvasContainer);
         super.render();
-
-        const keysPressed = new Set<string>();
         document.documentElement.addEventListener("page-rendered", () => {
-            this.setupResponsiveCanvas(this.canva)
-            this.ctx = this.canva.getContext();
-            this.ctx?.canvas.setAttribute("tabindex", "0");
-            this.ctx?.canvas.addEventListener("keydown", (event) => {
-                keysPressed.add(event.key);
-                if (this.ctx) {
-                    this.requestApiUpdate(keysPressed);
-                    // this.drawPaddles(this.ctx, this.player1pos, this.player2pos);
-                }
-            });
-            this.ctx?.canvas.addEventListener("keyup", (event) => {
-                keysPressed.delete(event.key);
-            });
+            this.setupCanvas();
+        });
+    }
 
-            if (this.ctx) {
-                this.getPositions();
+    private setupCanvas(): void {
+        this.ctx = this.canvasContainer.getContext();
+        const keysPressed = new Set<string>();
+
+        this.paddleWidth = 10;
+        this.paddleHeight = 80;
+        this.paddleMiddle = this.paddleHeight / 2;
+
+        this.getCtx()?.canvas.setAttribute("tabindex", "0");
+        this.getCtx()?.canvas.addEventListener("keydown", (event) => {
+            keysPressed.add(event.key);
+            if (this.getCtx()) {
+                this.requestApiUpdate(keysPressed);
+                // this.drawPaddles(this.getCtx(), this.player1pos, this.player2pos);
             }
         });
+        this.getCtx()?.canvas.addEventListener("keyup", (event) => {
+            keysPressed.delete(event.key);
+        });
+        this.getCtx()?.canvas.addEventListener("pointerdown", (ev) => {
+                console.log("pointer x:", ev.clientX, "pointer y:", ev.clientY, "canvas width:", this.getCtx().canvas.width, "canvas height:", this.getCtx().canvas.height);
+                if (ev.clientX < this.getCtx().canvas.width / 2 && ev.clientY < this.getCtx().canvas.height / 2) {
+                    console.log("Player 1 clicked");
+                    keysPressed.add("ArrowUp");
+                    keysPressed.add("w");
+                }
+                if (this.getCtx()) {
+                    this.requestApiUpdate(keysPressed);
+                    // this.drawPaddles(this.getCtx(), this.player1pos, this.player2pos);
+                }
+            },
+            false,
+        );
+
+        if (this.getCtx()) {
+            // this.getPositions();
+            // fetchData();
+            // this.canvasManager();
+            ws.onopen = () => {
+                console.log("WebSocket connection established");
+                // ws.send(JSON.stringify({ channel: "get-match-data", data: {match_id: 0} }));
+                //   "data": {"match_id": 1}
+                this.getPositions();
+            };
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error);
+            };
+            ws.onclose = () => {
+                console.log("WebSocket connection closed");
+            };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log("WebSocket message received:", data);
+            };
+        }
     }
 
-
-    private setupResponsiveCanvas(canvas: CanvaComponent): void {
-        const resize = () => {
-            const container = canvas.element?.parentElement!;
-            const containerWidth = container.clientWidth;
-            const containerHeight = container.clientHeight;
-
-            const widthRatio = containerWidth / this.REFERENCE_WIDTH;
-            const heightRatio = containerHeight / this.REFERENCE_HEIGHT;
-            this.scale = Math.min(widthRatio, heightRatio);
-
-            this.gameWidth = this.REFERENCE_WIDTH * this.scale;
-            console.log(`Game Width: ${this.gameWidth}`);
-            this.gameHeight = this.REFERENCE_HEIGHT * this.scale;
-
-            canvas.element!.width = this.gameWidth;
-            canvas.element!.height = this.gameHeight;
-            canvas.element!.style.width = `${this.gameWidth}px`;
-            canvas.element!.style.height = `${this.gameHeight}px`;
-            canvas.element!.style.display = 'block';
-            canvas.element!.style.margin = '0 auto';
-        };
-
-        resize();
-        window.addEventListener('resize', resize);
-    }
 
     private requestApiUpdate(keysPressed: Set<string>): void {
         if (keysPressed.has("ArrowUp")) {
@@ -107,31 +119,73 @@ class PongPage extends Page {
         }
     }
 
+    private denormalizePosition(normalizedPosition: number, max: number, min: number): number {
+        return normalizedPosition * (max - min) + min;
+    }
+
+    private getCtx(): CanvasRenderingContext2D {
+        if (!this.ctx) {
+            throw new Error("Can't get canvas context");
+        }
+        return this.ctx;
+    }
 
     private drawGame(data: {
-        ball: { ballX: number; ballY: number; ballRadius: number };
-        players: { PlayerID: string; playerColor: string; side: string; PaddlePos: number }[]
+        ball: { relativeBallX: number; relativeBallY: number; ballRadius: number };
+        players: { Player_id: number; playerColor: string; side: string; relativeY: number }[]
     }): void {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
 
+        window.addEventListener("resize", () => {
+            this.canvasManager();
+        });
 
-        this.ctx.beginPath();
-        this.ctx.arc(data.ball.ballX, data.ball.ballY, data.ball.ballRadius, 0, Math.PI * 2);
-        this.ctx.fillStyle = "white";
-        this.ctx.fill();
+        this.getCtx().clearRect(0, 0, this.getCtx().canvas.width, this.getCtx().canvas.height);
+        this.getCtx().lineWidth = 2;
+        this.getCtx().strokeStyle = "white";
+
+        // console.log("canvas width:", this.getCtx().canvas.clientWidth , "canvas height:", this.getCtx().canvas.clientHeight);
+
+        this.getCtx().beginPath();
+        this.getCtx().moveTo(this.getCtx().canvas.width / 2, 0);
+        this.getCtx().lineTo(this.getCtx().canvas.width / 2, this.getCtx().canvas.height);
+        this.getCtx().stroke();
+
+        // console.log("Drawing game with data:", data.players.map(player => ({player.relativeY})));
+        this.getCtx().beginPath();
+        this.getCtx().arc(this.denormalizePosition(data.ball.relativeBallX, this.getCtx().canvas.width, 0),
+            this.denormalizePosition(data.ball.relativeBallY, this.getCtx().canvas.height, 0), data.ball.ballRadius, 0, Math.PI * 2);
+        // console.log("Ball position:", this.denormalizePosition(data.ball.relativeBallX, this.getCtx().canvas.width, 0), this.denormalizePosition(data.ball.relativeBallY, this.getCtx().canvas.height, 0));
+        this.getCtx().fillStyle = "white";
+        this.getCtx().fill();
 
         data.players.forEach(player => {
             if (player.side === "left") {
-                this.player1ID = player.PlayerID;
+                this.player1ID = player.Player_id;
+                // console.log("at position:", this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) + " before denormalization " + player.relativeY);
             } else {
-                this.player2ID = player.PlayerID;
+                this.player2ID = player.Player_id;
             }
-            this.ctx.fillStyle = player.playerColor;
-            const paddleWidth = 10;
-            const paddleHeight = 80;
-            const x = player.side === "left" ? 0 : this.ctx.canvas.width - paddleWidth;
-            this.ctx.fillRect(x, player.PaddlePos, paddleWidth, paddleHeight);
+            this.getCtx().fillStyle = player.playerColor;
+            const x = player.side === "left" ? 0 : this.getCtx().canvas.width - this.paddleWidth;
+            this.getCtx().fillRect(x, this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) - this.paddleMiddle, this.paddleWidth, this.paddleHeight);
         });
+    }
+
+    private canvasManager() {
+        const liveScreenwidth = this.getCtx().canvas.clientWidth;
+        const liveScreenHeight = this.getCtx().canvas.clientHeight;
+        // console.log("liveScreenwidth:", liveScreenwidth, "liveScreenHeight:", liveScreenHeight);
+
+        if (this.getCtx().canvas.width !== liveScreenwidth || this.getCtx().canvas.height !== liveScreenHeight) {
+            this.getCtx().canvas.width = liveScreenwidth;
+            this.getCtx().canvas.height = liveScreenHeight;
+            // console.log("Canvas resized to:", liveScreenwidth, liveScreenHeight);
+            if (this.getCtx().canvas.width < 600 && this.getCtx().canvas.height < 450) {
+                this.getCtx().canvas.style.transform = "rotate(90deg)";
+                // console.log("Canvas rotated to 90 degrees :" ,this.getCtx().canvas.style.transform);
+            } else
+                this.getCtx().canvas.style.transform = "rotate(0deg)";
+        }
     }
 
     private getPositions() {
@@ -140,51 +194,52 @@ class PongPage extends Page {
         polling = true;
 
         const loop = () => {
-            fetch(`${BASE}/match/${gameid}`)
-                .then(res => res.json())
-                .then(data => {
-                    this.drawGame(data);
-                    if (data.isRunning) {
-                        this.MoveAIs(data);
-                    }
-                    setTimeout(loop, 17);
-                })
-                .catch(error => {
-                    console.error("Error fetching game data:", error);
-                });
+            ws.send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
+
+            ws.onmessage = (event) => {
+                //console.log(event.data);
+                const data = JSON.parse(event.data);
+                if (!data || !data.data || !data.data.ball || !data.data.players) {
+                    console.log("waiting for data");
+                    // setTimeout(loop, 17); // Retry after 17ms
+                    return;
+                }
+                // console.log("Received data:", data);
+                this.drawGame(data.data);
+
+                if (data.isRunning) {
+                    //   this.MoveAIs(data);
+                }
+            };
+            setTimeout(loop, 17);
         }
 
         loop();
     }
 
     private startGame() {
-        fetch(`${BASE}/startGame/${gameid}`, {method: 'PUT'})
+        // fetch(`${BASE}/startGame/${gameid}`, { method: 'PUT' })
+        ws.send(JSON.stringify({channel: "toggle-pause-match", data: {match_id: 0}}));
+        console.log("Game started");
+
     }
 
     private stopGame() {
         fetch(`${BASE}/stopGame/${gameid}`, {method: 'PUT'})
     }
 
-    private moveUp(playerID: string) {
-        fetch(`${BASE}/movePlayerUp/${playerID}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({playerID}),
-        })
+    private moveUp(playerID: number) {
+        ws.send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: "up"}}));
     }
 
-    private moveDown(playerID: string) {
-        fetch(`${BASE}/movePlayerDown/${playerID}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({playerID}),
-        })
+    private moveDown(playerID: number) {
+        ws.send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: "down"}}));
     }
 
     private async MoveAIs(data: {
         ball: { ballX: number; ballY: number; ballVelocityX: number; ballVelocityY: number };
         players: {
-            PlayerID: string;
+            Player_id: number;
             playerColor: string;
             side: string;
             PaddlePos: number;
@@ -217,9 +272,9 @@ class PongPage extends Page {
                 let readyRes = await res.json();
                 if (readyRes.move === 'up') {
                     // console.log(player.PlayerID);
-                    this.moveUp(player.PlayerID);
+                    this.moveUp(player.Player_id);
                 } else if (readyRes.move === 'down') {
-                    this.moveDown(player.PlayerID);
+                    this.moveDown(player.Player_id);
                 }
             }
         })

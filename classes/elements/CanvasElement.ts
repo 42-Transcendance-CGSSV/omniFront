@@ -1,17 +1,17 @@
 import {AComponentProps, AElement} from "./AElement";
 
-interface CanvaComponentProps extends AComponentProps {
+interface CanvasElementProps extends AComponentProps {
     id: string;
     width: number;
     height: number;
     onClick?: () => void;
 }
 
-export default class CanvaComponent extends AElement<CanvaComponentProps> {
+export default class CanvasElement extends AElement<CanvasElementProps> {
     public element: HTMLCanvasElement | undefined;
     public ctx!: CanvasRenderingContext2D;
 
-    public render(): CanvaComponent {
+    public render(): CanvasElement {
         this.element = document.createElement("canvas");
         this.applyBasicProperties();
 
