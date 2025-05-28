@@ -1,7 +1,6 @@
 import Page from "@classes/Page";
 import NavBar from "@components/NavBar";
 import CanvasElement from "@elements/CanvasElement";
-import DivElement from "classes/elements/DivElement";
 
 let UPDATE_INTERVAL_MS = 17; // 60 FPS same as .env but fuck it
 
@@ -12,9 +11,6 @@ const BASEAI = 'http://localhost:3001/api';
 let polling = false;
 const gameid = 0;
 
-const ws = new WebSocket(`${BASE_WS}`);
-
-
 class PongPage extends Page {
     private canvasContainer: CanvasElement;
     private ctx: CanvasRenderingContext2D | null = null;
@@ -23,6 +19,9 @@ class PongPage extends Page {
     private paddleWidth: number = 0;
     private paddleHeight: number = 0;
     private paddleMiddle: number = 0;
+    private ws?: WebSocket;
+    private keysPressed: {user_id: number, movement_type: "up" | "down" | null, key: string}[] = [];
+
 
     constructor() {
         super("PongPage", new NavBar({}));
@@ -31,70 +30,69 @@ class PongPage extends Page {
             id: "game-content",
             width: 1920,
             height: 1800,
-            className: "absolute inset-0 top-[20%] max-h-[90%] max-w-[90%] pr-2 pl-2 outline-2 rounded-3xl outline-lavender mx-auto my-auto",
+            className: "max-h-[90%] max-w-[90%] pr-2 pl-2 outline-2 rounded-3xl outline-lavender mx-auto my-auto",
         });
 
         this.addComponent(this.canvasContainer);
         super.render();
         document.documentElement.addEventListener("page-rendered", () => {
+            this.ws = new WebSocket(`${BASE_WS}`);
             this.setupCanvas();
         });
     }
 
     private setupCanvas(): void {
         this.ctx = this.canvasContainer.getContext();
-        const keysPressed = new Set<string>();
 
         this.paddleWidth = 10;
         this.paddleHeight = 80;
         this.paddleMiddle = this.paddleHeight / 2;
 
         this.getCtx()?.canvas.setAttribute("tabindex", "0");
-        this.canvasManager();
+        this.rescaleCanvas();
 
-        this.getCtx()?.canvas.addEventListener("keydown", (event) => {
-            keysPressed.add(event.key);
-            if (this.getCtx()) {
-                this.requestApiUpdate(keysPressed);
-                // this.drawPaddles(this.getCtx(), this.player1pos, this.player2pos);
-            }
-        });
-        this.getCtx()?.canvas.addEventListener("keyup", (event) => {
-            keysPressed.delete(event.key);
-        });
+
+        screen.orientation.addEventListener('change', () =>  this.rescaleCanvas());
+
+
+        this.getCtx()?.canvas.addEventListener("keydown", (event) => this.handlePlayerMovements(event));
+        this.getCtx()?.canvas.addEventListener("keyup", (event) => this.handlePlayerMovements(event));
+
         this.getCtx()?.canvas.addEventListener("pointerdown", (ev) => {
                 console.log("pointer x:", ev.clientX, "pointer y:", ev.clientY, "canvas width:", this.getCtx().canvas.width, "canvas height:", this.getCtx().canvas.height);
-                if (ev.clientX < this.getCtx().canvas.width / 2 && ev.clientY < this.getCtx().canvas.height / 2) {
-                    console.log("Player 1 clicked");
-                    keysPressed.add("ArrowUp");
-                    keysPressed.add("w");
-                }
-                if (this.getCtx()) {
-                    this.requestApiUpdate(keysPressed);
-                    // this.drawPaddles(this.getCtx(), this.player1pos, this.player2pos);
-                }
+                // if (ev.clientX < this.getCtx().canvas.width / 2 && ev.clientY < this.getCtx().canvas.height / 2) {
+                //     console.log("Player 1 clicked");
+                //     keysPressed.add("ArrowUp");
+                //     keysPressed.add("w");
+                // }
+                // if (this.getCtx()) {
+                //     this.handlePlayerMovements(keysPressed);
+                //     this.drawPaddles(this.getCtx(), this.player1pos, this.player2pos);
+                // }
             },
             false,
         );
 
         if (this.getCtx()) {
+        
+
             // this.getPositions();
             // fetchData();
-            // this.canvasManager();
-            ws.onopen = () => {
+            // this.rescaleCanvas();
+            this.getWs().onopen = () => {
                 console.log("WebSocket connection established");
                 // ws.send(JSON.stringify({ channel: "get-match-data", data: {match_id: 0} }));
                 //   "data": {"match_id": 1}
                 this.getPositions();
             };
 
-            ws.onerror = (error) => {
+            this.getWs().onerror = (error) => {
                 console.error("WebSocket error:", error);
             };
-            ws.onclose = () => {
+            this.getWs().onclose = () => {
                 console.log("WebSocket connection closed");
             };
-            ws.onmessage = (event) => {
+            this.getWs().onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 console.log("WebSocket message received:", data);
             };
@@ -102,25 +100,34 @@ class PongPage extends Page {
     }
 
 
-    private requestApiUpdate(keysPressed: Set<string>): void {
-        if (keysPressed.has("ArrowUp")) {
-            this.moveUp(this.player2ID);
+    private async handlePlayerMovements(event: KeyboardEvent): Promise<void> {
+
+        if (event.type === "keydown")
+        {
+            const playerId = event.key === "ArrowUp" || event.key === "ArrowDown" ? this.player2ID : (event.key === "w" || event.key === "s") ? this.player1ID : -1;
+            const movement: "up" | "down" | null = event.key === "ArrowDown" || event.key === "s" ? "down" : (event.key === "ArrowUp" || event.key === "w") ? "up" : null;
+
+            if (!this.keysPressed.find((key) => key.user_id === playerId))
+                this.keysPressed.push({user_id: playerId, movement_type: movement, key: event.key})
+            if (event.key === "Escape") {
+                this.stopGame();
+            }
+            if (event.key === "Enter") {
+                this.startGame();
+            }
+
         }
-        if (keysPressed.has("ArrowDown")) {
-            this.moveDown(this.player2ID);
+
+
+      //  console.log(this.keysPressed)
+
+        if (event.type === "keyup")
+        {
+            //Remove the good user id. How to know the user_id of the player has keyup if two player has the same key in the array ?
+            this.keysPressed = this.keysPressed.filter((value) => value.key !== event.key);
+            console.log("keyup", this.keysPressed);
         }
-        if (keysPressed.has("w")) {
-            this.moveUp(this.player1ID);
-        }
-        if (keysPressed.has("s")) {
-            this.moveDown(this.player1ID);
-        }
-        if (keysPressed.has("Escape")) {
-            this.stopGame();
-        }
-        if (keysPressed.has("Enter")) {
-            this.startGame();
-        }
+
     }
 
     private denormalizePosition(normalizedPosition: number, max: number, min: number): number {
@@ -134,14 +141,18 @@ class PongPage extends Page {
         return this.ctx;
     }
 
+    private getWs(): WebSocket {
+        if (!this.ws)
+            throw new Error("Can't get the websocket");
+        return this.ws;
+    }
+
     private drawGame(data: {
         ball: { relativeBallX: number; relativeBallY: number; ballRadius: number };
         players: { Player_id: number; playerColor: string; side: string; relativeY: number }[]
     }): void {
 
-        window.addEventListener("resize", () => {
-            this.canvasManager();
-        });
+        window.addEventListener("resize", () => this.rescaleCanvas());
 
         this.getCtx().clearRect(0, 0, this.getCtx().canvas.width, this.getCtx().canvas.height);
         this.getCtx().lineWidth = 2;
@@ -182,25 +193,29 @@ class PongPage extends Page {
         });
     }
 
-    private canvasManager() {
-        const liveScreenwidth = window.screen.width;
-        const liveScreenHeight = window.screen.height;
-        console.log("liveScreenwidth:", liveScreenwidth, "liveScreenHeight:", liveScreenHeight);
-
-        if (this.getCtx().canvas.width !== liveScreenwidth || this.getCtx().canvas.height !== liveScreenHeight) {
-            
-            this.getCtx().canvas.width = (liveScreenwidth * 80) / 100;
-            this.getCtx().canvas.height = (liveScreenHeight * 80) / 100;
-            if (liveScreenwidth > 600 && ) {
-                this.getCtx().canvas.style.transform = "rotate(0deg)";
-            }
-            else {
-                this.getCtx().canvas.width = liveScreenwidth * 90;
-                this.getCtx().canvas.height = (liveScreenHeight * 75) / 100;
-                this.getCtx().canvas.style.transform = "rotate(90deg)";
-            }
+    private rescaleCanvas() {
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+    
+        const canvas = this.getCtx().canvas;
+    
+        // Reset transformation for proper updates
+        canvas.style.transform = "";
+        canvas.style.transformOrigin = "";
+    
+        const isPortrait = screenHeight > screenWidth;
+    
+        if (isPortrait) {
+            canvas.width = Math.floor(screenHeight * 0.75);
+            canvas.height = Math.floor(screenWidth * 0.9);
+            canvas.style.transform = "rotate(90deg)";
+            return;
         }
+        canvas.width = Math.floor(screenWidth * 0.8);
+        canvas.height = Math.floor(screenHeight * 0.6);
+        canvas.style.transform = "none";
     }
+    
 
     private getPositions() {
         if (polling)
@@ -211,9 +226,15 @@ class PongPage extends Page {
 
             document.getElementById("game-content")!.focus();
             this.getCtx()?.canvas.focus(); 
-            ws.send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
 
-            ws.onmessage = (event) => {
+            for (let element of this.keysPressed) 
+            {
+                if (element.movement_type)
+                this.move(element.user_id, element.movement_type)
+            }
+
+            this.getWs().send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
+            this.getWs().onmessage = (event) => {
                 //console.log(event.data);
                 const data = JSON.parse(event.data);
                 if (!data || !data.data || !data.data.ball || !data.data.players) {
@@ -228,15 +249,16 @@ class PongPage extends Page {
                     //   this.MoveAIs(data);
                 }
             };
-            setTimeout(loop, 17);
+            setTimeout(loop, UPDATE_INTERVAL_MS);
         }
 
         loop();
     }
 
+
     private startGame() {
         // fetch(`${BASE}/startGame/${gameid}`, { method: 'PUT' })
-        ws.send(JSON.stringify({channel: "toggle-pause-match", data: {match_id: 0}}));
+        this.getWs().send(JSON.stringify({channel: "toggle-pause-match", data: {match_id: 0}}));
         console.log("Game started");
 
     }
@@ -245,12 +267,8 @@ class PongPage extends Page {
         fetch(`${BASE}/stopGame/${gameid}`, {method: 'PUT'})
     }
 
-    private moveUp(playerID: number) {
-        ws.send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: "up"}}));
-    }
-
-    private moveDown(playerID: number) {
-        ws.send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: "down"}}));
+    private move(playerID: number, direction: "up" | "down") {
+        this.getWs().send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: direction}}));
     }
 
     private async MoveAIs(data: {
@@ -289,9 +307,9 @@ class PongPage extends Page {
                 let readyRes = await res.json();
                 if (readyRes.move === 'up') {
                     // console.log(player.PlayerID);
-                    this.moveUp(player.Player_id);
+                  //TODO: FIX  this.moveUp(player.Player_id);
                 } else if (readyRes.move === 'down') {
-                    this.moveDown(player.Player_id);
+                //TODO: FIX    this.moveDown(player.Player_id);
                 }
             }
         })
