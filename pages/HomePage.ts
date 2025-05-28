@@ -9,10 +9,13 @@ import GradientButton from "@classes/components/GradientButton";
 import Footer from "@classes/components/Footer";
 import axios from "axios";
 import CardMode from "@components/CardMode";
+import ModeContainer from "@components/ModeContainer";
 
 class HomePage extends Page {
 
     private gamesModalIsOpen: boolean = false;
+    private iaDifficultyIsOpen: boolean = false;
+    private homeElementIsVisible: boolean = true;
 
     /**
      * Constructor for the HomePage class.
@@ -108,24 +111,127 @@ class HomePage extends Page {
         });
     }
 
-    private toggleGamesModal(): void {
+    private toggleHomeElementVisibility(): HTMLElement | null {
         const appElement = document.getElementById("app");
         if (!appElement) {
             console.error("Unable to find the root element with id 'app'.");
-            return;
+            return null;
         }
 
-        if (!this.gamesModalIsOpen) {
-            const modal = this.buildSelectGameModeModal();
-            appElement.appendChild(modal.render().getElement()!);
+        if (this.homeElementIsVisible) {
             document.getElementById("features-container")!.classList.add("hidden");
             document.getElementById("section-container")!.classList.add("hidden");
         } else {
-            document.getElementById("gamemode-modal-container")!.remove();
             document.getElementById("features-container")!.classList.remove("hidden");
             document.getElementById("section-container")!.classList.remove("hidden");
         }
+
+        this.homeElementIsVisible = !this.homeElementIsVisible;
+        return appElement;
+    }
+
+    private toggleGamesModal(): void {
+        const appElement = this.toggleHomeElementVisibility();
+        if (!appElement) return;
+
+        if (!this.gamesModalIsOpen) appElement.appendChild(this.buildSelectGameModeModal().render().getElement()!);
+        else document.getElementById("gamemode-modal-container")!.remove();
+
         this.gamesModalIsOpen = !this.gamesModalIsOpen;
+    }
+
+    private buildSelectGameModeModal(): DivElement {
+        const cards: { id: string, title: string, description: string, icon: string, onClick: () => void }[] = [];
+        cards.push({
+            id: "ia",
+            title: "AI Game",
+            description: "Challenge our intelligent AI opponent with adaptive difficulty levels.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleIaDifficultyModal()
+        });
+        cards.push({
+            id: "unranked",
+            title: "Unranked Game",
+            description: "Practice your skills in relaxed matches with no ranking pressure.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        cards.push({
+            id: "ranked",
+            title: "Ranked Game",
+            description: "Skill-based matches where every point counts toward your rank.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+
+        const modes: CardMode[] = cards.map(card => new CardMode({
+            id: card.id,
+            title: card.title,
+            description: card.description,
+            icon: card.icon,
+            onClick: () => {
+                this.toggleGamesModal();
+                card.onClick();
+            }
+        }));
+
+        return new ModeContainer({
+            id: "gamemode",
+            modalTitle: "Select Game Mode",
+            modalSubtitle: "Choose your preferred way to play and challenge yourself",
+            closeButtonEvent: () => this.toggleGamesModal(),
+            content: modes
+        });
+    }
+
+    private toggleIaDifficultyModal(): void {
+        const appElement = this.toggleHomeElementVisibility();
+        if (!appElement) return;
+
+        if (!this.iaDifficultyIsOpen) appElement.appendChild(this.buildIADifficultiesModal().render().getElement()!);
+        else document.getElementById("difficulty-modal-container")!.remove();
+
+        this.iaDifficultyIsOpen = !this.iaDifficultyIsOpen;
+    }
+
+    private buildIADifficultiesModal(): DivElement {
+        const difficulties: { id: string, title: string, icon: string, onClick: () => void }[] = [];
+        difficulties.push({
+            id: "easy-level",
+            title: "Beginner",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        difficulties.push({
+            id: "average-level",
+            title: "Average",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        difficulties.push({
+            id: "expert-level",
+            title: "Expert",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+
+        const modes: CardMode[] = difficulties.map(card => new CardMode({
+            id: card.id,
+            title: card.title,
+            icon: card.icon,
+            onClick: () => {
+                this.toggleIaDifficultyModal();
+                card.onClick();
+            }
+        }));
+
+        return new ModeContainer({
+            id: "difficulty",
+            modalTitle: "IA Training Selector",
+            modalSubtitle: "Choose your IA opponent level",
+            closeButtonEvent: () => this.toggleIaDifficultyModal(),
+            content: modes
+        });
     }
 
     private buildGameInstructions(): DivElement {
@@ -312,63 +418,6 @@ class HomePage extends Page {
         super.render();
     }
 
-
-    private buildSelectGameModeModal(): DivElement {
-
-        const modalContainer = new DivElement({
-            id: "gamemode-modal-container",
-            className: "fixed z-100 top-0 inset-0 w-screen bg-transparent backdrop-blur-md overflow-auto"
-        });
-
-        const modal = new DivElement({
-            id: "gamemode-modal",
-            className: "relative h-fit pb-10 lg:pb-0 lg:h-[70%] mt-[5%] w-[90%] max-w-5xl bg-darkblue-950 rounded-3xl border-3 border-white/10 flex flex-col items-center justify-center mx-auto"
-        });
-
-        modal.addComponent(new ButtonElement({
-            id: "close-modal-button",
-            className: "absolute top-4 right-4 text-white/80 text-3xl hover:text-white transition-colors",
-            text: "✕",
-            onClick: () => {
-                this.toggleGamesModal();
-            }
-        }));
-
-        const titleContainer = new DivElement({
-            id: "title-container",
-            className: "flex flex-col items-center text-center my-4 gap-y-2"
-        });
-        titleContainer.addComponents([new TextElement({
-            id: "modal-title",
-            text: "Select Game Mode",
-            className: "text-3xl sm:text-4xl lg:text-5xl font-bold text-[#bebfff]",
-            type: "h1"
-        }),
-            new TextElement({
-                id: "modal-subtitle",
-                text: "Choose your preferred way to play and challenge yourself",
-                className: "text-lg lg:text-xl text-[#bebfff] max-w-2xl",
-                type: "p"
-            })
-        ]);
-
-        modal.addComponent(titleContainer);
-
-        const flexContainer = new DivElement({
-            id: "modes-container",
-            className: "flex flex-wrap justify-center items-center my-4 lg:my-8 gap-4 lg:gap-6"
-        });
-
-        flexContainer.addComponent(new CardMode({id: "ia", title: "AI Game", description: "Challenge our intelligent AI opponent with adaptive difficulty levels.", icon: "assets/svg/pong/terminal.svg"}))
-        flexContainer.addComponent(new CardMode({id: "unranked", title: "Unranked Game", description: "Practice your skills in relaxed matches with no ranking pressure.", icon: "assets/svg/pong/terminal.svg"}))
-        flexContainer.addComponent(new CardMode({id: "ranked", title: "Ranked Game", description: "Skill-based matches where every point counts toward your rank.", icon: "assets/svg/pong/terminal.svg"}))
-
-        modal.addComponent(flexContainer);
-
-        modalContainer.addComponent(modal);
-
-        return modalContainer;
-    }
 
 }
 

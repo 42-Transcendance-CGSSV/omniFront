@@ -155,26 +155,26 @@ export default class NavBar extends AElement {
 
         const languageSelector = new DivElement({
             id: "lang-select",
-            className: "flex flex-col w-16 h-10 ml-4",
+            className: "flex flex-col items-center w-12 h-10 ml-4",
         });
 
         rightContainer.addComponent(languageSelector);
 
         const languages = [
-            { id: "french-selector", lang: "fr", src: "/assets/svg/france.svg" },
-            { id: "english-selector", lang: "en", src: "/assets/svg/english.svg" },
-            { id: "spanish-selector", lang: "es", src: "/assets/svg/spain.svg" },
+            {id: "french-selector", lang: "fr", src: "/assets/svg/france.svg"},
+            {id: "english-selector", lang: "en", src: "/assets/svg/english.svg"},
+            {id: "spanish-selector", lang: "es", src: "/assets/svg/spain.svg"},
         ];
 
         const dropdownContainer = new DivElement({
             id: "lang-dropdown",
-            className: "absolute top-full mt-2 hidden bg-white rounded-lg shadow-lg z-5 flex flex-col items-center gap-2",
+            className: "hidden bg-transparent rounded-lg shadow-lg z-5 flex flex-col items-center",
         });
 
-        languages.forEach(({ id, lang, src }) => {
+        languages.forEach(({id, lang, src}) => {
             const flag = new ImgElement({
                 id,
-                className: "w-12 h-10 cursor-pointer hover:scale-105 transition-transform",
+                className: "w-full h-full cursor-pointer hover:scale-105 transition-transform",
                 src,
                 onClick: () => {
                     setLangCookie(lang);
@@ -190,14 +190,15 @@ export default class NavBar extends AElement {
                     }
                 },
             });
-            dropdownContainer.addComponent(flag);
+            if (getLangFromCookie() !== lang)
+                dropdownContainer.addComponent(flag);
         });
 
         const currentLang = getLangFromCookie() || "fr";
         const mainFlag = new ImgElement({
             id: "main-flag",
-            className: "w-12 h-10 cursor-pointer relative",
-            src: languages.find(({ lang }) => lang === currentLang)?.src || "/assets/svg/france.svg",
+            className: "w-12 h-10 cursor-pointer hidden lg:inline",
+            src: languages.find(({lang}) => lang === currentLang)?.src || "/assets/svg/france.svg",
             onClick: () => {
                 const dropdown = dropdownContainer.getElement();
                 if (dropdown) {

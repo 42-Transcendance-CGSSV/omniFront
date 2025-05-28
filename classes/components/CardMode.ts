@@ -8,7 +8,8 @@ interface GameModeComponentProps extends AComponentProps {
     icon: string;
 
     title: string;
-    description: string;
+    description?: string;
+    onClick: () => void;
 }
 
 
@@ -17,7 +18,8 @@ export default class CardMode extends AElement<GameModeComponentProps> {
     public render(): CardMode {
         const cardBackground: DivElement = new DivElement({
             id: "card-background-" + this.props.id,
-            className: "hover:scale-105 transition-transform duration-300 rounded-3xl bg-white/1 border border-white/10 hover:border-white/15 p-6 lg:p-8 flex flex-col items-center text-center space-y-4"
+            className: "hover:scale-105 transition-transform duration-300 rounded-3xl bg-white/1 border border-white/10 hover:border-white/15 p-6 lg:p-8 flex flex-col items-center text-center space-y-4",
+            onClick: () => this.props.onClick()
         });
 
         const modeIcon: DivElement = new ImgElement({
@@ -38,15 +40,18 @@ export default class CardMode extends AElement<GameModeComponentProps> {
             type: "h3",
             text: this.props.title
         })
+        cardBackground.addComponents([modeGradient, modeTitle]);
 
-        const modeDescription: TextElement = new TextElement({
-            id: "mode-description-" + this.props.id,
-            className: "font-inter text-sm lg:text-base text-white/80 max-w-[200px]",
-            type: "p",
-            text: this.props.description
-        })
+        if (this.props.description) {
+            const modeDescription: TextElement = new TextElement({
+                id: "mode-description-" + this.props.id,
+                className: "font-inter text-sm lg:text-base text-white/80 max-w-[200px]",
+                type: "p",
+                text: this.props.description
+            })
+            cardBackground.addComponent(modeDescription);
+        }
 
-        cardBackground.addComponents([modeGradient, modeTitle, modeDescription]);
         this.element = cardBackground.render().getElement();
         return this;
     }

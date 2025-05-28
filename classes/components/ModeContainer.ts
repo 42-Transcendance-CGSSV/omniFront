@@ -9,7 +9,7 @@ interface ModeContainerComponentProps extends AComponentProps {
     modalSubtitle?: string;
 
     closeButtonEvent: () => void;
-    content: DivElement[];
+    content?: DivElement[];
 }
 
 
@@ -42,7 +42,7 @@ export default class ModeContainer extends AElement<ModeContainerComponentProps>
             if (this.props.modalTitle) {
                 titleContainer.addComponent(new TextElement({
                     id: "modal-title",
-                    text: "Select Game Mode",
+                    text: this.props.modalTitle,
                     className: "text-3xl sm:text-4xl lg:text-5xl font-bold text-[#bebfff]",
                     type: "h1"
                 }));
@@ -51,7 +51,7 @@ export default class ModeContainer extends AElement<ModeContainerComponentProps>
             if (this.props.modalSubtitle) {
                 titleContainer.addComponent(new TextElement({
                     id: "modal-subtitle",
-                    text: "Choose your preferred way to play and challenge yourself",
+                    text: this.props.modalSubtitle,
                     className: "text-lg lg:text-xl text-[#bebfff] max-w-2xl",
                     type: "p"
                 }));
@@ -60,13 +60,15 @@ export default class ModeContainer extends AElement<ModeContainerComponentProps>
         }
 
         const flexContainer = new DivElement({
-            id: "modes-container",
+            id: this.props.id + "-content",
             className: "flex flex-wrap justify-center items-center my-4 lg:my-8 gap-4 lg:gap-6"
         });
 
-        this.props.content.forEach((item) => flexContainer.addComponent(item));
-        modal.addComponent(flexContainer);
-
+        if (this.props.content) {
+            this.props.content.forEach((item) => flexContainer.addComponent(item));
+            modal.addComponent(flexContainer);
+        }
+        modalContainer.addComponent(modal);
         this.element = modalContainer.render().getElement();
         return this;
     }
