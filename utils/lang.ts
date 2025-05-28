@@ -8,7 +8,7 @@ export function getLangFromCookie(): string | undefined {
 
 export function setLangCookie(lang: string): void {
     document.cookie = `lang=${encodeURIComponent(lang)}; path=/; max-age=31536000`;
-    i18next.changeLanguage(getLangFromCookie(), (error, _t) => {
+    i18next.changeLanguage(getLangFromCookie(), (error: Error | null, _t: i18next.TFunction) => {
         if (error) throw error;
         router.navigate(window.location.pathname);
     });
