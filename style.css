@@ -43,7 +43,15 @@ input:-webkit-autofill {
     --color-subwhite: #b4b1bf;
 
     --color-feature-background: rgba(255, 255, 255, 0.018);
-    --color-lavender: #bebfff;
+    --color-blue-lavender: #bebfff;
+    --color-lavender: #b794db;
+
+
+    --font-glacial: Glacial Indifference;
+    --font-poppins: poppins;
+    --font-inter: Inter;
+
+    --breakpoint-xxs: 230px;
 
     --animate-typing: typing 1.7s steps(20), blink 1s infinite;
     --animate-infinite-typing: typing 1.7s steps(20) infinite alternate, blink 1s infinite;
@@ -52,12 +60,6 @@ input:-webkit-autofill {
     --animate-fade-left: fade-left 1000ms linear;
     --animate-paddle-move-1: paddle-move-1 4s linear infinite alternate;
     --animate-paddle-move-2: paddle-move-2 4s linear infinite alternate;
-
-    --font-glacial: Glacial Indifference;
-    --font-poppins: poppins;
-    --font-inter: Inter;
-
-    --breakpoint-xxs: 230px;
 
     @keyframes fade-left {
         0% {

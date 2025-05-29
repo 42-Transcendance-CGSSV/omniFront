@@ -9,6 +9,8 @@ import SvgElement from "@elements/SvgElement";
 import TextElement from "@elements/TextElement";
 import ListElement from "@elements/ListElement";
 import ListItemElement from "@elements/ListItemElement";
+import ImgElement from "@elements/ImgElement";
+import {getLangFromCookie, setLangCookie} from "../../utils/lang";
 
 type Link = {
     name: string;
@@ -115,12 +117,13 @@ export default class NavBar extends AElement {
         const links: Link[] = [
             {name: "%nav.home%", url: "/"},
             {name: "%nav.pong%", url: "/pong"},
-            {name: "%nav.github%", url: "https://github.com"},
+            {name: "%nav.github%", url: "https://github.com/42-Transcendance-CGSSV"},
         ];
 
         links.forEach(link => {
             const item = new ListItemElement({
-                type: "li", href: link.url,
+                type: "li",
+                href: link.url,
                 text: link.name,
                 className: "hover:duration-100 hover:transition-all hover:scale-115 hover:ease-linear"
             })
@@ -131,6 +134,7 @@ export default class NavBar extends AElement {
             displayCondition: "lg:hidden",
             animation: ""
         }).build(() => router.navigate("/login"));
+
         navLinksList.addComponent(mobileLogin);
 
         navLinksContainer.addComponent(navLinksList);
@@ -138,10 +142,76 @@ export default class NavBar extends AElement {
         navbarContainer.addComponent(logoContainer);
         navbarContainer.addComponent(navLinksContainer);
 
-        const loginButton = new GradientButton("login", "%nav.login%", {displayCondition: "hidden lg:inline"}).build(() => router.navigate("/login"));
-        navbarContainer.addComponent(loginButton);
+        const rightContainer = new DivElement({
+            id: "right-container",
+            className: "flex flex-row items-center justify-center animate-fade-left gap-y-12"
+        });
 
+        rightContainer.addComponent(new GradientButton("login", "%nav.login%", {
+            displayCondition: "hidden lg:inline",
+            animation: " "
+        }).build(() => router.navigate("/login")))
+
+
+        const languageSelector = new DivElement({
+            id: "lang-select",
+            className: "flex flex-col items-center w-12 h-10 ml-4",
+        });
+
+        rightContainer.addComponent(languageSelector);
+
+        const languages = [
+            {id: "french-selector", lang: "fr", src: "/assets/svg/france.svg"},
+            {id: "english-selector", lang: "en", src: "/assets/svg/english.svg"},
+            {id: "spanish-selector", lang: "es", src: "/assets/svg/spain.svg"},
+        ];
+
+        const dropdownContainer = new DivElement({
+            id: "lang-dropdown",
+            className: "hidden bg-transparent rounded-lg shadow-lg z-5 flex flex-col items-center",
+        });
+
+        languages.forEach(({id, lang, src}) => {
+            const flag = new ImgElement({
+                id,
+                className: "w-full h-full cursor-pointer hover:scale-105 transition-transform",
+                src,
+                onClick: () => {
+                    setLangCookie(lang);
+
+                    const mainFlagElement = mainFlag.getElement();
+                    if (mainFlagElement) {
+                        mainFlagElement.setAttribute("src", src);
+                    }
+
+                    const dropdownElement = dropdownContainer.getElement();
+                    if (dropdownElement) {
+                        dropdownElement.classList.add("hidden");
+                    }
+                },
+            });
+            if (getLangFromCookie() !== lang)
+                dropdownContainer.addComponent(flag);
+        });
+
+        const currentLang = getLangFromCookie() || "fr";
+        const mainFlag = new ImgElement({
+            id: "main-flag",
+            className: "w-12 h-10 cursor-pointer hidden lg:inline",
+            src: languages.find(({lang}) => lang === currentLang)?.src || "/assets/svg/france.svg",
+            onClick: () => {
+                const dropdown = dropdownContainer.getElement();
+                if (dropdown) {
+                    dropdown.classList.toggle("hidden");
+                }
+            },
+        });
+
+        languageSelector.addComponents([mainFlag, dropdownContainer]);
+
+        navbarContainer.addComponent(rightContainer);
         navElement.addComponent(navbarContainer);
+
         header.addComponent(navElement);
 
         this.element = header.render().getElement();

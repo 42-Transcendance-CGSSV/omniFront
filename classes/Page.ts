@@ -10,6 +10,7 @@ export default class Page {
     }
 
     public render(): void {
+        const event = new Event("page-rendered");
         const app = document.getElementById("app");
         if (app) {
             // virtual node to implement there
@@ -21,6 +22,7 @@ export default class Page {
                 (this as any).mounted();
             }
         }
+        document.documentElement.dispatchEvent(event);
     }
 
     public addComponent(component: AElement): void {

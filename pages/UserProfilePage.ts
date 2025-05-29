@@ -4,7 +4,7 @@ import Footer from "@classes/components/Footer";
 import PlayerDisplayer from "@classes/components/PlayerDisplayer";
 import DivElement from "@elements/DivElement";
 import TextElement from "@elements/TextElement";
-import ProgressBarComponent from "@classes/components/ProgressBarComponent";
+import ProgressBar from "@components/ProgressBar";
 
 interface UserProfilePageProps {
     id?: string;
@@ -98,7 +98,7 @@ class UserProfilePage extends Page {
                     children: [
                         new TextElement({
                             text: "Statistics",
-                            className: "text-xl font-semibold text-lavender mb-2"
+                            className: "text-xl font-semibold text-blue-lavender mb-2"
                         }),
                         new TextElement({
                             text: `${stats.games} Games`,
@@ -123,7 +123,7 @@ class UserProfilePage extends Page {
                     children: [
                         new TextElement({
                             text: "Achievements",
-                            className: "text-xl font-semibold text-lavender mb-2"
+                            className: "text-xl font-semibold text-blue-lavender mb-2"
                         }),
                         ...achievements.map((ach: any) => new DivElement({
                             className: "bg-white/10 rounded-xl p-3 mb-2 flex flex-col gap-1",
@@ -136,7 +136,7 @@ class UserProfilePage extends Page {
                                     text: ach.description,
                                     className: "text-white/70 text-sm"
                                 }),
-                                new ProgressBarComponent({
+                                new ProgressBar({
                                     height: "20px",
                                     width: "100%",
                                     backgroundColor: "bg-red-300",
@@ -159,7 +159,7 @@ class UserProfilePage extends Page {
             children: [
                 new TextElement({
                     text: "Match History",
-                    className: "text-2xl font-bold text-lavender mb-4"
+                    className: "text-2xl font-bold text-blue-lavender mb-4"
                 }),
                 ...matches.map((match: any) => {
                     // Détermination du gagnant et du perdant

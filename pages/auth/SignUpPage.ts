@@ -22,7 +22,7 @@ export default class SignInPage extends Page {
                 id: "title",
                 type: "h1",
                 text: "Sign Up",
-                className: "text-lg xl:text-4xl font-bold text-lavender "
+                className: "text-lg xl:text-4xl font-bold text-blue-lavender"
             })]
         });
 

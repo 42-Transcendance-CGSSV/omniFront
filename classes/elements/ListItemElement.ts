@@ -15,11 +15,10 @@ export default class ListItemElement extends AElement<ListItemComponentProps> {
         if (this.props.href) {
             const link = document.createElement("a");
             if (this.props.className) link.className = this.props.className;
-
             link.setAttribute("href", this.props.href);
 
             if (this.props.text) {
-                if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) this.element.textContent = i18next.t(this.props.text.slice(1, -1));
+                if (this.props.text.startsWith("%") && this.props.text.endsWith("%")) link.textContent = i18next.t(this.props.text.slice(1, -1));
                 else link.textContent = this.props.text;
             }
             this.element.appendChild(link);
