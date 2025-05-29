@@ -3,7 +3,7 @@ import Page from "classes/Page";
 import DivElement from "@elements/DivElement";
 import TextElement from "@elements/TextElement";
 import ImgElement from "@elements/ImgElement";
-import ProgressBar from "@components/ProgressBarComponent";
+import ProgressBar from "classes/components/ProgressBar";
 
 
 class VerificationEmailPage extends Page {
@@ -18,7 +18,7 @@ class VerificationEmailPage extends Page {
 
 		const emailContent = new DivElement({
 			id: "emailContainer",
-			className: "w-[40%] h-[40%] md:w-[60%] md:h-[60%] p-4 flex flex-col items-center justify-center overflow-hidden bg-[#FFFFFF]/2 border border-[#FFFFFF]/7 rounded-lg",
+			className: "min-w-[40%] min-h-[40%] md:min-h-[60%] p-4 flex flex-col items-center justify-center overflow-hidden bg-[#FFFFFF]/2 border border-[#FFFFFF]/7 rounded-lg",
 		});
 
 		emailContent.addComponent(this.buildImage());
@@ -35,12 +35,12 @@ class VerificationEmailPage extends Page {
 	private buildImage(): DivElement {
 		return new DivElement({
 			id: "emailImage",
-			className: " p-4 rounded-full flex items-center justify-center bg-[#4318D1]/20 mb-8",
+			className: "p-2 md:p-4 rounded-full flex items-center justify-center bg-[#4318D1]/20 mb-8",
 			children: [
 				new ImgElement({
 					src: "assets/email.svg",
 					alt: "Verification Icon",
-					className: "w-6  md:w-12"
+					className: "w-8 md:w-12"
 				})
 			]
 		});
@@ -58,17 +58,17 @@ class VerificationEmailPage extends Page {
 	private buildSubtitle(): DivElement {
 		const subTitleDiv = new DivElement({
 			id: "emailSubtitle",
-			className: "text-subwhite text-[1.2vw] text-center mb-4"
+			className: "text-subwhite text-xs md:text-[1.2vw] text-center mb-4"
 		});
 
 		subTitleDiv.addComponent(new TextElement({
 			text: "Please check your email for a verification link.",
-			className: "text-subwhite text-[1.2vw] text-center"
+			className: "text-subwhite text-center"
 		}));
 
 		subTitleDiv.addComponent(new TextElement({
 			text: "If you don't see it, check your spam folder.",
-			className: "text-subwhite text-[1.2vw] text-center"
+			className: "text-subwhite text-center"
 		}));
 
 		return subTitleDiv;
@@ -77,7 +77,7 @@ class VerificationEmailPage extends Page {
 	private buildProgressBar(): DivElement {
 		return new DivElement({
 			id: "emailProgressBar",
-			className: "w-1/2 h-2 bg-[#4318D1]/20 rounded-full m-4 ",
+			className: "w-2/3 md:w-1/2 h-2 bg-[#4318D1]/20 rounded-full md:m-4 ",
 			children: [
 				new ProgressBar({
 					id: "emailProgress",
@@ -85,14 +85,14 @@ class VerificationEmailPage extends Page {
 					maxValue: 100,
 					progressColor: "bg-blue-500",
 					backgroundColor: "bg-[#4318D1]",
-					width: "100%",
+					width: "50%",
 					height: "2px",
 					showText: false,
 					textContent: "{{current}}/{{max}}"
 				}),
 				new TextElement({
 					text: "Waiting for verification...",
-					className: "text-subwhite text-[1.2vw] text-center mt-4"
+					className: "text-subwhite text-xs md:text-[1.2vw] text-center mt-4"
 				})
 			]
 		});
@@ -100,15 +100,15 @@ class VerificationEmailPage extends Page {
 
 	private buildFooterEmail(): DivElement {
 		return new DivElement({
-			className: "w-full flex items-center justify-center mt-8 p-4",
+			className: "w-full flex flex-col md:flex-row items-center justify-center mt-8 p-4 md:gap-2",
 			children: [
 				new TextElement({
 					text: "Didn't receive the email?",
-					className: "text-subwhite text-[1.1vw] text-center"
+					className: "text-subwhite text-xs md:text-[1.1vw] text-center"
 				}),
 				new TextElement({
 					text: "Resend verification link",
-					className: "text-[#4318D1] text-[1.1vw] text-center hover:underline cursor-pointer font-medium transition-colors duration-200 hover:text-[#5a2de8]"
+					className: "text-[#4318D1] text-xs md:text-[1.2vw] text-center hover:underline cursor-pointer font-medium transition-colors duration-200 hover:text-[#5a2de8]"
 				})
 			]
 		});
