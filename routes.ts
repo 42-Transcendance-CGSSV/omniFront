@@ -6,8 +6,9 @@ import PongPage from "@pages/PongPage";
 import UserProfilePage from "@pages/UserProfilePage";
 import SignInPage from "@pages/auth/SignInPage";
 import SignUpPage from "@pages/auth/SignUpPage";
+import VerificationEmailPage from "@pages/auth/VerificationEmailPage";
 import i18next from 'i18next';
-import {getLangFromCookie} from 'utils/lang';
+import { getLangFromCookie } from 'utils/lang';
 
 
 import en from './assets/locales/en.json';
@@ -45,15 +46,19 @@ router
         path: "/pong",
         component: () => PongPage,
     })
+    .addRoute({
+        path: "/verify-email",
+        component: () => VerificationEmailPage,
+    })
     .setNotFoundComponent(() => HomePage);
 
 i18next.init({
     lng: getLangFromCookie() || 'en',
     fallbackLng: 'en',
     resources: {
-        en: {translation: en},
-        fr: {translation: fr},
-        es: {translation: es},
+        en: { translation: en },
+        fr: { translation: fr },
+        es: { translation: es },
     },
     interpolation: {
         escapeValue: false,
