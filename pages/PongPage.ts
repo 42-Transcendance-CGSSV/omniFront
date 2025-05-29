@@ -35,7 +35,7 @@ class PongPage extends Page {
 
         this.addComponent(this.canvasContainer);
         super.render();
-        document.documentElement.addEventListener("page-rendered", () => {
+        document.documentElement.addEventListener("page-rendered:PongPage", () => {
             this.ws = new WebSocket(`${BASE_WS}`);
             this.setupCanvas();
         });
