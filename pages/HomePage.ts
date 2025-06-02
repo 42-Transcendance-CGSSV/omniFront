@@ -8,8 +8,14 @@ import FeatureCard from "@classes/components/FeatureCard";
 import GradientButton from "@classes/components/GradientButton";
 import Footer from "@classes/components/Footer";
 import axios from "axios";
+import CardMode from "@components/CardMode";
+import ModeContainer from "@components/ModeContainer";
 
 class HomePage extends Page {
+
+    private gamesModalIsOpen: boolean = false;
+    private iaDifficultyIsOpen: boolean = false;
+    private homeElementIsVisible: boolean = true;
 
     /**
      * Constructor for the HomePage class.
@@ -19,7 +25,7 @@ class HomePage extends Page {
         super("PongPage", new NavBar({}));
         const homeContainer = new DivElement({
             id: "home-content",
-            className: "w-full h-screen flex flex-col items-center justify-center p-4 overflow-hidden",
+            className: "w-full h-screen min-h-[650px] flex flex-col items-center justify-center p-4 overflow-hidden",
         });
 
         homeContainer.addComponent(this.buildTitles());
@@ -99,7 +105,132 @@ class HomePage extends Page {
                 id: "play-button",
                 text: "START GAME",
                 className: "px-8 py-3 bg-darkblue-950 rounded-[32px] shadow-[0px_0px_20px_0px_rgba(123,109,255,0.60)] outline-2 outline-offset-[-2px] outline-[#b794db] flex justify-center items-center text-barwhite text-lg md:text-xl lg:text-xl 2xl:text-2xl font-semibold font-poppins leading-normal select-none"
-            })]
+            })], onClick: () => {
+                this.toggleGamesModal();
+            }
+        });
+    }
+
+    private toggleHomeElementVisibility(): HTMLElement | null {
+        const appElement = document.getElementById("app");
+        if (!appElement) {
+            console.error("Unable to find the root element with id 'app'.");
+            return null;
+        }
+
+        if (this.homeElementIsVisible) {
+            document.getElementById("features-container")!.classList.add("hidden");
+            document.getElementById("section-container")!.classList.add("hidden");
+        } else {
+            document.getElementById("features-container")!.classList.remove("hidden");
+            document.getElementById("section-container")!.classList.remove("hidden");
+        }
+
+        this.homeElementIsVisible = !this.homeElementIsVisible;
+        return appElement;
+    }
+
+    private toggleGamesModal(): void {
+        const appElement = this.toggleHomeElementVisibility();
+        if (!appElement) return;
+
+        if (!this.gamesModalIsOpen) appElement.appendChild(this.buildSelectGameModeModal().render().getElement()!);
+        else document.getElementById("gamemode-modal-container")!.remove();
+
+        this.gamesModalIsOpen = !this.gamesModalIsOpen;
+    }
+
+    private buildSelectGameModeModal(): DivElement {
+        const cards: { id: string, title: string, description: string, icon: string, onClick: () => void }[] = [];
+        cards.push({
+            id: "ia",
+            title: "AI Game",
+            description: "Challenge our intelligent AI opponent with adaptive difficulty levels.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleIaDifficultyModal()
+        });
+        cards.push({
+            id: "unranked",
+            title: "Unranked Game",
+            description: "Practice your skills in relaxed matches with no ranking pressure.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        cards.push({
+            id: "ranked",
+            title: "Ranked Game",
+            description: "Skill-based matches where every point counts toward your rank.",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+
+        const modes: CardMode[] = cards.map(card => new CardMode({
+            id: card.id,
+            title: card.title,
+            description: card.description,
+            icon: card.icon,
+            onClick: () => {
+                this.toggleGamesModal();
+                card.onClick();
+            }
+        }));
+
+        return new ModeContainer({
+            id: "gamemode",
+            modalTitle: "Select Game Mode",
+            modalSubtitle: "Choose your preferred way to play and challenge yourself",
+            closeButtonEvent: () => this.toggleGamesModal(),
+            content: modes
+        });
+    }
+
+    private toggleIaDifficultyModal(): void {
+        const appElement = this.toggleHomeElementVisibility();
+        if (!appElement) return;
+
+        if (!this.iaDifficultyIsOpen) appElement.appendChild(this.buildIADifficultiesModal().render().getElement()!);
+        else document.getElementById("difficulty-modal-container")!.remove();
+
+        this.iaDifficultyIsOpen = !this.iaDifficultyIsOpen;
+    }
+
+    private buildIADifficultiesModal(): DivElement {
+        const difficulties: { id: string, title: string, icon: string, onClick: () => void }[] = [];
+        difficulties.push({
+            id: "easy-level",
+            title: "Beginner",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        difficulties.push({
+            id: "average-level",
+            title: "Average",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+        difficulties.push({
+            id: "expert-level",
+            title: "Expert",
+            icon: "assets/svg/pong/terminal.svg",
+            onClick: () => this.toggleGamesModal()
+        });
+
+        const modes: CardMode[] = difficulties.map(card => new CardMode({
+            id: card.id,
+            title: card.title,
+            icon: card.icon,
+            onClick: () => {
+                this.toggleIaDifficultyModal();
+                card.onClick();
+            }
+        }));
+
+        return new ModeContainer({
+            id: "difficulty",
+            modalTitle: "IA Training Selector",
+            modalSubtitle: "Choose your IA opponent level",
+            closeButtonEvent: () => this.toggleIaDifficultyModal(),
+            content: modes
         });
     }
 
@@ -171,7 +302,7 @@ class HomePage extends Page {
             type: "h2",
             id: "features-title",
             text: "Features of Game",
-            className: "w-full text-center text-lavender pb-10 xl:pb-18 text-base md:text-xl lg:text-2xl xl:text-3xl font-bold font-inter leading-tight select-none"
+            className: "w-full text-center text-blue-lavender pb-10 xl:pb-18 text-base md:text-xl lg:text-2xl xl:text-3xl font-bold font-inter leading-tight select-none"
         });
 
         return new DivElement({
@@ -286,6 +417,7 @@ class HomePage extends Page {
     render(): void {
         super.render();
     }
+
 
 }
 

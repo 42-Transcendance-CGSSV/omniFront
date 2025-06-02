@@ -21,6 +21,7 @@ export default class Page {
                 (this as any).mounted();
             }
         }
+        document.documentElement.dispatchEvent(new Event("page-rendered:" + this.name));
     }
 
     public addComponent(component: AElement): void {

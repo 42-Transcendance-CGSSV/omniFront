@@ -23,7 +23,7 @@ export default class SignInPage extends Page {
                 id: "title",
                 type: "h1",
                 text: "Welcome back !",
-                className: "text-lg xl:text-4xl font-bold text-lavender mb-2"
+                className: "text-lg xl:text-4xl font-bold text-blue-lavender mb-2"
             })]
         });
 
@@ -116,8 +116,10 @@ export default class SignInPage extends Page {
 
         })
 
-        const notImplementedTooltip = new TextElement({ id: "google-tooltip", type: "span", text: "Not Implemented Yet",
-            className: "group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-1 text-md rounded-md absolute left-1/2 -translate-x-1/2 opacity-0 m-4 mx-auto"})
+        const notImplementedTooltip = new TextElement({
+            id: "google-tooltip", type: "span", text: "Not Implemented Yet",
+            className: "group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-1 text-md rounded-md absolute left-1/2 -translate-x-1/2 opacity-0 m-4 mx-auto"
+        })
 
         const googleContainer = new DivElement({
             id: "google-container",

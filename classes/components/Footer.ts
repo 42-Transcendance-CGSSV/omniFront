@@ -54,7 +54,7 @@ export default class Footer {
         const contactTitle: TextElement = new TextElement({
             id: "contact-title",
             text: "Contact",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
+            className: "text-blue-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
         });
 
         const contactContainer: DivElement = new DivElement({
@@ -84,7 +84,7 @@ export default class Footer {
         const linkTitle: TextElement = new TextElement({
             id: "link-title",
             text: "Quick Links",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
+            className: "text-blue-lavender text-2xl font-semibold font-inter leading-9 mb-2 select-none"
         });
 
         const linkContainer: DivElement = new DivElement({
@@ -101,7 +101,7 @@ export default class Footer {
         const aboutTitle: TextElement = new TextElement({
             id: "about-us-title",
             text: "About Us",
-            className: "text-lavender text-2xl font-semibold font-inter leading-9 mb-4 select-none"
+            className: "text-blue-lavender text-2xl font-semibold font-inter leading-9 mb-4 select-none"
         });
         const aboutContainer: DivElement = new DivElement({
             id: "about-us-container",
