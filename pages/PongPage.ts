@@ -19,25 +19,27 @@ class PongPage extends Page {
     private paddleWidth: number = 0;
     private paddleHeight: number = 0;
     private paddleMiddle: number = 0;
+    private ballRadius: number = 10;
     private ws?: WebSocket;
     private keysPressed: {user_id: number, movement_type: "up" | "down" | null, key: string}[] = [];
-
-
+    
+    
     constructor() {
         super("PongPage", new NavBar({}));
-
+        
         this.canvasContainer = new CanvasElement({
             id: "game-content",
             width: 1920,
             height: 1800,
             className: "max-h-[90%] max-w-[90%] pr-2 pl-2 outline-2 rounded-3xl outline-lavender mx-auto my-auto",
         });
-
+        
         this.addComponent(this.canvasContainer);
         super.render();
         document.documentElement.addEventListener("page-rendered:PongPage", () => {
             this.ws = new WebSocket(`${BASE_WS}`);
             this.setupCanvas();
+            
         });
     }
 
@@ -59,7 +61,7 @@ class PongPage extends Page {
         this.getCtx()?.canvas.addEventListener("keyup", (event) => this.handlePlayerMovements(event));
 
         this.getCtx()?.canvas.addEventListener("pointerdown", (ev) => {
-                console.log("pointer x:", ev.clientX, "pointer y:", ev.clientY, "canvas width:", this.getCtx().canvas.width, "canvas height:", this.getCtx().canvas.height);
+                // console.log("pointer x:", ev.clientX, "pointer y:", ev.clientY, "canvas width:", this.getCtx().canvas.width, "canvas height:", this.getCtx().canvas.height);
                 // if (ev.clientX < this.getCtx().canvas.width / 2 && ev.clientY < this.getCtx().canvas.height / 2) {
                 //     console.log("Player 1 clicked");
                 //     keysPressed.add("ArrowUp");
@@ -83,6 +85,7 @@ class PongPage extends Page {
                 console.log("WebSocket connection established");
                 // ws.send(JSON.stringify({ channel: "get-match-data", data: {match_id: 0} }));
                 //   "data": {"match_id": 1}
+                this.getWs().send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
                 this.getPositions();
             };
 
@@ -125,7 +128,7 @@ class PongPage extends Page {
         {
             //Remove the good user id. How to know the user_id of the player has keyup if two player has the same key in the array ?
             this.keysPressed = this.keysPressed.filter((value) => value.key !== event.key);
-            console.log("keyup", this.keysPressed);
+            // console.log("keyup", this.keysPressed);
         }
 
     }
@@ -148,31 +151,38 @@ class PongPage extends Page {
     }
 
     private drawGame(data: {
-        ball: { relativeBallX: number; relativeBallY: number; ballRadius: number };
-        players: { Player_id: number; playerColor: string; side: string; relativeY: number }[]
+        ball: { relativeBallX: number; relativeBallY: number};
+        players: { Player_id: number; side: string; relativeY: number }[]
     }): void {
-
+        const central_cercle_radius:number = 20;
         window.addEventListener("resize", () => this.rescaleCanvas());
 
+        // Full clear
         this.getCtx().clearRect(0, 0, this.getCtx().canvas.width, this.getCtx().canvas.height);
+        // --------
+
         this.getCtx().lineWidth = 2;
-        this.getCtx().strokeStyle = "white";
-
+        this.getCtx().strokeStyle = "#B794DB";
         // console.log("canvas width:", this.getCtx().canvas.clientWidth , "canvas height:", this.getCtx().canvas.clientHeight);
-
         this.getCtx().beginPath();
         this.getCtx().moveTo(this.getCtx().canvas.width / 2, 0);
+        this.getCtx().lineTo(this.getCtx().canvas.width / 2, this.getCtx().canvas.height / 2 - central_cercle_radius);
+        this.getCtx().moveTo(this.getCtx().canvas.width / 2, this.getCtx().canvas.height / 2 + central_cercle_radius);
         this.getCtx().lineTo(this.getCtx().canvas.width / 2, this.getCtx().canvas.height);
         this.getCtx().stroke();
-
+        this.getCtx().beginPath();
+        this.getCtx().arc (this.getCtx().canvas.width / 2, this.getCtx().canvas.height / 2, central_cercle_radius, 0,Math.PI * 2)
+        this.getCtx().stroke();
+        
         // console.log("Drawing game with data:", data.players.map(player => ({player.relativeY})));
+        this.getCtx().fillStyle = "#612BFF";
         this.getCtx().beginPath();
         this.getCtx().arc(this.denormalizePosition(data.ball.relativeBallX, this.getCtx().canvas.width, 0),
-            this.denormalizePosition(data.ball.relativeBallY, this.getCtx().canvas.height, 0), data.ball.ballRadius, 0, Math.PI * 2);
+        this.denormalizePosition(data.ball.relativeBallY, this.getCtx().canvas.height, 0), this.ballRadius, 0, Math.PI * 2);
         // console.log("Ball position:", this.denormalizePosition(data.ball.relativeBallX, this.getCtx().canvas.width, 0), this.denormalizePosition(data.ball.relativeBallY, this.getCtx().canvas.height, 0));
-        this.getCtx().fillStyle = "white";
         this.getCtx().fill();
-
+        
+        // console.log(data.players)
         data.players.forEach(player => {
             if (player.side === "left") {
                 this.player1ID = player.Player_id;
@@ -189,6 +199,7 @@ class PongPage extends Page {
             // this.getCtx().
 
             this.getCtx().fillRect(x, this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) - this.paddleMiddle, this.paddleWidth, this.paddleHeight);
+            this.getCtx().arc (x, this.denormalizePosition(player.relativeY, this.getCtx().canvas.height, 0) + this.paddleHeight - this.paddleMiddle, this.paddleWidth, 0,Math.PI * 2)
             this.getCtx().shadowColor = 'transparent';
         });
     }
@@ -233,10 +244,9 @@ class PongPage extends Page {
                 this.move(element.user_id, element.movement_type)
             }
 
-            this.getWs().send(JSON.stringify({channel: "get-match-data", data: {match_id: 0}}));
             this.getWs().onmessage = (event) => {
-                //console.log(event.data);
                 const data = JSON.parse(event.data);
+                // console.log("raw recived " + data.data);
                 if (!data || !data.data || !data.data.ball || !data.data.players) {
                     console.log("waiting for data");
                     // setTimeout(loop, 17); // Retry after 17ms
@@ -271,50 +281,7 @@ class PongPage extends Page {
         this.getWs().send(JSON.stringify({channel: "move-paddle", data: {user_id: playerID, direction: direction}}));
     }
 
-    private async MoveAIs(data: {
-        ball: { ballX: number; ballY: number; ballVelocityX: number; ballVelocityY: number };
-        players: {
-            Player_id: number;
-            playerColor: string;
-            side: string;
-            PaddlePos: number;
-            AI: boolean;
-            PlayerName: string;
-            numberOfGoals: number
-        }[]
-    }) {
-        // console.log(data);
 
-        data.players.forEach(async player => {
-            if (player.AI === true) {
-                let res = await fetch(`${BASEAI}/train`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        playerID: player.PlayerName,
-                        ballX: data.ball.ballX,
-                        ballY: data.ball.ballY,
-                        ballSpeedX: data.ball.ballVelocityX,
-                        ballSpeedY: data.ball.ballVelocityY,
-                        myPosition: player.PaddlePos,
-                        PaddleHeight: '80',
-                        myScore: player.numberOfGoals,
-                        mySide: `${player.side === 'left' ? 0.9 : 0.1}`
-                    })
-                })
-                let readyRes = await res.json();
-                if (readyRes.move === 'up') {
-                    // console.log(player.PlayerID);
-                  //TODO: FIX  this.moveUp(player.Player_id);
-                } else if (readyRes.move === 'down') {
-                //TODO: FIX    this.moveDown(player.Player_id);
-                }
-            }
-        })
-
-    }
 }
 
 export default PongPage;
