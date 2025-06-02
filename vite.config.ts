@@ -15,12 +15,23 @@ export default defineConfig({
                 drop_console: true
             }
         },
+        rollupOptions: {
+            output: {
+                format: 'es',
+                entryFileNames: 'assets/[name]-[hash].js',
+                chunkFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]'
+            }
+        },
+        target: 'es2015',
+        cssCodeSplit: true
     },
     server: {
         port: 3004,
         host: true,
         open: false,
     },
+    base: "/",
     resolve: {
         extensions: [".js", ".ts", ".jsx", ".json"],
         alias: {
@@ -32,8 +43,8 @@ export default defineConfig({
     },
     plugins: [
         compression({
-            algorithm: 'brotliCompress',
-            ext: '.br'
+            algorithm: 'gzip',
+            ext: '.gz'
         }), tsconfigPaths()
     ]
 });
